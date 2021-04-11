@@ -4,7 +4,7 @@ started 11th April 2021
 
 Class that wraps up all the essential peripherals for the functioning of the 
 choreChartTracker as intended in its most basic form:
-    - vl53L0X array of sensors
+    - vl53L0X array of sensors (default address of 0x29, needs to be reassigned on startup)
     - DS1307 real time clock 
     - SD card reader.
 OLED screen control is omitted. This class provides getter functions and returns
@@ -59,9 +59,12 @@ class choreChartTracker {
         //Only constructor. 
         //  Checks all inputs meets constraints.
         //  Checks DS1307 address of 0x68 is present on i2c bus.
-        //  Checks if SD card present on i2c bus. 
-        //  Sets private error fields set accordingly. 
+        //  Checks if SD card present on SPI bus. 
+        //  Current hardware only supports 4 ToF sensors so choreDoer vector
+        //  must only be of size=4.
+        //  Sets private error fields set accordingly.
         //  Multiple errors are concatenated, delineated with full-stops.
+        //  If no errors, initializes all peripherals.
         choreChartTracker(std::vector<tofUnit> tofArray_in, 
                           std::vector<choreDoer> choreDoers_in);
 
