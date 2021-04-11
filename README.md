@@ -4,7 +4,9 @@ Our apartment houses 4 undergrads, and in order to fairly and unambiguously dele
 
 ## The Chore Chart
 
-<img src="./pics_vids/chorechart.jpg" width="373" height="557">
+<p align="center">
+    <img src="./pics_vids/chorechartempty.jpg" width="373" height="557">
+</p>
 
 Each row represents each room-mate, and each column represents a particular chore. When a room-mate is done with a chore, he moves the chore-token down one space. If a room-mate decides to do a chore when not his turn, he leaves the chore-token where it is, and he gets a tally which can be redeemed to skip his turn in the future. The table is drawn on a white board, and the chore-tokens are simple magnets. The system ensures zero ambiguity, ensures accountability, and distributes tasks fairly. The result: a very peaceful apartment.
 
