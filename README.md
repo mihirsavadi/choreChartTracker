@@ -37,4 +37,4 @@ Haven't reached this part yet. Need to collect more data. Lots of potential thin
 - Mihir Savadi      : made the board. wrapped the low level stuff together.
 - Lucas Nunn        : software stuff, data processing etc.
 - Vignesh Sinha     : also software stuff.
-- Nathan Strominger : moral support, bomb-ass food, all around lad.
+- Nathan Strominger : moral support, creator of bomb-ass food, all around lad.
