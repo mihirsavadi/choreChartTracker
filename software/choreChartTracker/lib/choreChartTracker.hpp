@@ -102,4 +102,8 @@ class choreChartTracker {
         uint8_t logHour, logMin, logSec;
 
         bool loggingIn30;
+
+        //helper functions
+        void setToFaddresses();       //runs algo to set addy's to all ToF sensors
+        void peripheralHealthCheck(); //checks if peripherals are gucci
 };      
