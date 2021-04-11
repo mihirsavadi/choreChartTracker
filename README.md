@@ -33,7 +33,8 @@ Haven't reached this part yet. Need to collect more data. Lots of potential thin
 2. Port over all the hardware into an actual PCB, with extendable daughter cards to allow for adding even more columns if needed. Would only really do this if for whatever reason demand appears for it. For now the solderable breadboard is perfect - its permanentness is adequate whilst still allowing for additions or modifications when/where needed.
 
 ## Peeps
-Room-mate 1 - Mihir Savadi      : made the board. wrapped the low level stuff together.
-Room-mate 2 - Lucas Nunn        : software stuff, data processing etc.
-Room-mate 3 - Vignesh Sinha     : also software stuff.
-Room-mate 4 - Nathan Strominger : moral support, bomb-ass food, all around lad.
+
+- Mihir Savadi      : made the board. wrapped the low level stuff together.
+- Lucas Nunn        : software stuff, data processing etc.
+- Vignesh Sinha     : also software stuff.
+- Nathan Strominger : moral support, bomb-ass food, all around lad.
