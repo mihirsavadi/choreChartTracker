@@ -92,7 +92,7 @@ class choreChartTracker {
         void run();
 
         // getter for soon-to-log flag
-        bool const loggingIn30();
+        bool const isLoggingIn30();
 
     private:        
         //static variables
