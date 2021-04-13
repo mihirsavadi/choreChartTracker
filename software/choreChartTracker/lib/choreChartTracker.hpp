@@ -24,17 +24,25 @@ TODO:
 #include <string>
 #include <vector>
 
+#include <Wire.h>
+#include <SPI.h>
+
+#define ERDELIM std::string(". ")
+
 /*
     Table for assigning data to each time of flight sensor
         Constraints:
             - address cannot be 0x68 which is reserved for DS1307
-            - address cannot be 0x3C which is reserved for OLED
+            - address cannot be 0x3C which is reserved for OLED SSD1306 chip
             - address cannot be which is reserved for any other peripheral
                 that might be used.
+            - xshut ports cannot be repeated
+            - addresses cannot be repeated
             - choreNames cannot be repeated
 */
 struct tofUnit {
-    word address;           //address of ToFarray
+    word address;           //address of ToF sensor. word is 16bit.
+    uint8_t xShutPort;      //arduino pin connected to sensor's xshut port
     std::string choreName;  //name of assigned chore column
 };
 std::vector<tofUnit> tofArray;
@@ -55,7 +63,7 @@ std::vector<choreDoer> choreDoers;
 
 
 /*
-    Main class
+    Le class
 */
 class choreChartTracker {
     public:
@@ -66,13 +74,13 @@ class choreChartTracker {
         //  Current hardware only supports 4 ToF sensors so choreDoer vector
         //  must only be of size=4.
         //  Sets private error fields set accordingly.
-        //  Multiple errors are concatenated, delineated with full-stops.
+        //  Multiple errors are concatenated, delineated with full-stops + space
         //  If no errors, initializes all peripherals.
         choreChartTracker(std::vector<tofUnit> tofArray_in, 
-                          std::vector<choreDoer> choreDoers_in);
+                          std::vector<choreDoer> choreDoers_in );
 
         //  Getter for errors.
-        void getError(bool &errorFlag, std::string &errorMessage);
+        void const getError(bool &errorFlag, std::string &errorMessage);
 
         //  sets DS1307 time. shouldn't be called during normal operation
         void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
