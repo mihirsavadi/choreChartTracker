@@ -10,6 +10,10 @@ choreChartTracker as intended in its most basic form:
 OLED screen control is omitted. This class provides getter functions and returns
 errors, which can be parsed and displayed on the OLED in main(){}.
 
+Only one instance of this class should be created before entering infinite loop.
+I could make this a singleton class, but that adds extra semantic complexity that
+I dont really want to deal with.
+
 TODO: 
     1. test all peripherals isolated first, understand their interfaces.
     2. create constructor with all peripheral interfacing and error handling and test.
@@ -17,7 +21,6 @@ TODO:
 */
 
 #include <Arduino.h>
-
 #include <string>
 #include <vector>
 
@@ -72,12 +75,11 @@ class choreChartTracker {
         void getError(bool &errorFlag, std::string &errorMessage);
 
         //  sets DS1307 time. shouldn't be called during normal operation
-        void setRTCtime(uint8_t hour, uint8_t min, uint8_t sec,
-                        uint8_t month, uint8_t date, uint8_t year);
+        void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
+                        uint8_t hour, uint8_t min, uint8_t sec);
 
-        //  set log time
-        void setLogTime(uint8_t hour, uint8_t min, uint8_t sec,
-                        uint8_t year, uint8_t month, uint8_t date);
+        //  set time to log once a day
+        void setLogTime(uint8_t hour, uint8_t min, uint8_t sec);
 
         //  gets log time as string in format "Hour, Min, Sec"
         std::string const getLogTime(); 
