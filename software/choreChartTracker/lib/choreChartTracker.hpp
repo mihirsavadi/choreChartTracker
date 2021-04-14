@@ -21,11 +21,13 @@ TODO:
 */
 
 #include <Arduino.h>
-#include <string>
-#include <vector>
-
 #include <Wire.h>
 #include <SPI.h>
+
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
 
 #define ERDELIM std::string(". ")
 
@@ -45,10 +47,9 @@ struct tofUnit {
     uint8_t xShutPort;      //arduino pin connected to sensor's xshut port
     std::string choreName;  //name of assigned chore column
 };
-std::vector<tofUnit> tofArray;
 
 /*
-    Table for data for each chore doer
+    Table for data for each chore doer. If one the thresholds represent choreToken distance from sensor assuming sensor is placed at the top of the chore chart.
         constraints:
             - Upper and lower bounds of any two ore more choreDoers cannot coincide
             - Upper and lower bounds of any choreDoer cannot surpass vl53L0X limits.
@@ -56,11 +57,9 @@ std::vector<tofUnit> tofArray;
 */
 struct choreDoer {
     std::string name; //name of chore doer
-    int upperBound;   //sensor upper bound for doer's row location
-    int lowerBound;   //sensor lower bound for doers row location
+    //sensor bounds for doers row location. upper is closer to sensor so lower.
+    uint16_t upperBound, lowerBound;
 };
-std::vector<choreDoer> choreDoers;
-
 
 /*
     Le class
