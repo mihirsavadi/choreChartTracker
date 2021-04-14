@@ -30,7 +30,7 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
     std::map<uint8_t, uint8_t> xshutCountMap;
     std::map<std::string, uint8_t> choreNameCountMap;
 
-    for (int i = 0; i < tofArray_in.size(); i++) {
+    for (size_t i = 0; i < tofArray_in.size(); i++) {
         if (tofArray_in[i].address == 0x68)
             usedaddy68 = true;
         else if (tofArray_in[i].address == 0x3C)
@@ -39,14 +39,14 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
         //insert pair into map. insert returns pair whose first is an iterator to 
         // new item or existing item, and second is a flag which is false if item 
         // already exists. 
-        std::pair xshutResult = xshutCountMap.insert(
+        auto xshutResult = xshutCountMap.insert(
             std::pair<uint8_t, uint8_t>(tofArray_in[i].xShutPort, 1)
         );
         if (xshutResult.second == false)
             xshutResult.first->second++;
 
-        std::pair choreNameResult = choreNameCountMap.insert(
-            std::pair<uint8_t, uint8_t>(tofArray_in[i].choreName, 1)
+        auto choreNameResult = choreNameCountMap.insert(
+            std::pair<std::string, uint8_t>(tofArray_in[i].choreName, 1)
         );
         if (choreNameResult.second == false)
             choreNameResult.first->second++;
@@ -95,11 +95,12 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
     };
     std::vector<threshold> orderedThresholds;
 
-    for (int i = 0; i < choreDoers_in.size(); i++) {
-        std::pair choreDoerResult = doerNameCount.insert(
-            std::pair<std::string, uint8_t> choreDoers_in[i].name, 1);
-        )
-        if (choreDoerResult == false)
+    for (size_t i = 0; i < choreDoers_in.size(); i++) {
+        auto choreDoerResult = doerNameCount.insert(
+            std::pair<std::string, uint8_t>(choreDoers_in[i].name, 1)
+        );
+
+        if (choreDoerResult.second == false)
             choreDoerResult.first->second++;
         
         threshold toInsert;
@@ -113,7 +114,7 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
         }
     );
 
-    for (int i = 1; i < orderedThresholds.size(); i++) {
+    for (size_t i = 1; i < orderedThresholds.size(); i++) {
         if (orderedThresholds[i-1].lower > orderedThresholds[i].lower) {
             thresholdsOverlap = true;
             break;
@@ -125,6 +126,17 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
             doerNameRepeat = false;
             break;
         }
+    }
+
+    if (doerNameRepeat)
+    {
+        this->errorPresent = true;
+        this->errorDescription.append("choreDoer names repeated" + ERDELIM);
+    }
+    if (thresholdsOverlap)
+    {
+        this->errorPresent = true;
+        this->errorDescription.append("choreDoer token distance thresholds overlapping" + ERDELIM);
     }
 
     

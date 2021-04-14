@@ -2,7 +2,7 @@
 #include <U8g2lib.h>
 #include <Wire.h>
 
-#include "../lib/choreChartTracker.hpp"
+#include "choreChartTracker.hpp"
 // #include <choreChartTracker.hpp>
 
 //macros to store number of chores and chore doers, which is fixed based on hardware
