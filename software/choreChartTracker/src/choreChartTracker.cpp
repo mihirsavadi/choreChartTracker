@@ -7,7 +7,7 @@
 ///////////////////////// PRIVATE METHODS //////////////////////////////////////
 void choreChartTracker::setToFaddresses() 
 {
-
+    
 }
 
 void choreChartTracker::peripheralHealthCheck() 
@@ -24,7 +24,7 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
 {
     //1. check for tofArray_in constraints
     bool usedaddy68 = false, usedaddy3C = false, addyRepeated = false, 
-            xshutRepeated = false, choreNameRepeated = false;
+            xshutRepeated = false, choreNameRepeated = false, addyRangeBad = false;
 
     //first is value, second is count.
     std::map<uint8_t, uint8_t> xshutCountMap;
@@ -35,6 +35,11 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
             usedaddy68 = true;
         else if (tofArray_in[i].address == 0x3C)
             usedaddy3C = true;
+
+        if (!(tofArray_in[i].address <= 0x30 || tofArray_in[i].address >= 0x3F))
+        {
+            addyRangeBad = true;
+        }
 
         //insert pair into map. insert returns pair whose first is an iterator to 
         // new item or existing item, and second is a flag which is false if item 
@@ -71,6 +76,10 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
     if (usedaddy3C) {
         this->errorPresent = true;
         this->errorDescription.append("i2c 0x3C address used, reserved for SSD1306 OLED driver chip" + ERDELIM);
+    }
+    if (choreNameRepeated) {
+        this->errorPresent = true;
+        this->errorDescription.append("ToF addresses not in range of 0x30 and 0x3F" + ERDELIM);
     }
     if (addyRepeated) {
         this->errorPresent = true;

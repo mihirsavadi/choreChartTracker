@@ -41,6 +41,7 @@ TODO:
             - xshut ports cannot be repeated
             - addresses cannot be repeated
             - choreNames cannot be repeated
+            - addresses must be between 0x30 and 0x3F
 */
 struct tofUnit {
     uint16_t address;           //address of ToF sensor. word is 16bit.
