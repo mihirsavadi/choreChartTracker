@@ -139,8 +139,6 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
         this->errorDescription.append("choreDoer token distance thresholds overlapping" + ERDELIM);
     }
 
-    
-
     //3. check if DS1307 is present on i2c bus
 
     //4. check if SD card present on SPI bus
