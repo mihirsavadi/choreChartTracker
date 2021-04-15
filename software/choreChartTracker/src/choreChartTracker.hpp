@@ -3,7 +3,7 @@ Mihir Savadi
 started 11th April 2021
 
 Class that wraps up all the essential peripherals for the functioning of the 
-choreChartTracker as intended in its most basic form:
+choreChartTracker as intended in its most basic form. Sort of like an API.
     - vl53L0X array of sensors (default address of 0x29, needs to be reassigned on startup)
     - DS1307 real time clock 
     - SD card reader.
@@ -43,7 +43,7 @@ TODO:
             - choreNames cannot be repeated
 */
 struct tofUnit {
-    word address;           //address of ToF sensor. word is 16bit.
+    uint16_t address;           //address of ToF sensor. word is 16bit.
     uint8_t xShutPort;      //arduino pin connected to sensor's xshut port
     std::string choreName;  //name of assigned chore column
 };
