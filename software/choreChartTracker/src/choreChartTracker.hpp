@@ -24,6 +24,8 @@ TODO:
 #include <Wire.h>
 #include <SPI.h>
 
+#include <Adafruit_VL53L0X.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -76,8 +78,11 @@ class choreChartTracker {
         //  Sets private error fields set accordingly.
         //  Multiple errors are concatenated, delineated with full-stops + space
         //  If no errors, initializes all peripherals.
-        choreChartTracker(std::vector<tofUnit> tofArray_in, 
-                          std::vector<choreDoer> choreDoers_in );
+        choreChartTracker(std::vector<tofUnit> &tofArray_in, 
+                          std::vector<choreDoer> &choreDoers_in );
+        
+        // getter for constructor done flag
+        bool const getConstructorDoneFlag();
 
         //  Getter for errors.
         void const getError(bool &errorFlag, std::string &errorMessage);
@@ -104,8 +109,9 @@ class choreChartTracker {
         // getter for soon-to-log flag
         bool const isLoggingIn30();
 
-    private:        
-        //static variables
+    private:
+        bool constructorDone = false;
+
         bool errorPresent;            //1 for yes 0 for no
         std::string errorDescription; //default if no error
 
@@ -116,7 +122,14 @@ class choreChartTracker {
 
         bool loggingIn30;
 
-        //helper functions
-        void setToFaddresses();       //runs algo to set addy's to all ToF sensors
-        void peripheralHealthCheck(); //checks if peripherals are gucci
+        //  HELPER FUNCTIONS
+        //checks if peripherals are gucci
+        void peripheralHealthCheck();
+
+        //Peripheral Library Functions
+        Adafruit_VL53L0X sens0 = Adafruit_VL53L0X();
+        Adafruit_VL53L0X sens1 = Adafruit_VL53L0X();
+        Adafruit_VL53L0X sens2 = Adafruit_VL53L0X();
+        Adafruit_VL53L0X sens3 = Adafruit_VL53L0X();
+        VL53L0X_RangingMeasurementData_t mes0, mes1, mes2, mes3;
 };      

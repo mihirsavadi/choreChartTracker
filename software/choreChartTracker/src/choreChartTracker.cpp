@@ -5,22 +5,15 @@
 #include "choreChartTracker.hpp"
 
 ///////////////////////// PRIVATE METHODS //////////////////////////////////////
-void choreChartTracker::setToFaddresses() 
-{
-    
-}
-
 void choreChartTracker::peripheralHealthCheck() 
 {
     
 }
 
-
-
 ///////////////////////// PUBLIC METHODS ///////////////////////////////////////
 
-choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in, 
-                                        std::vector<choreDoer> choreDoers_in) 
+choreChartTracker::choreChartTracker(std::vector<tofUnit> &tofArray_in, 
+                                        std::vector<choreDoer> &choreDoers_in) 
 {
     //1. check for tofArray_in constraints
     bool usedaddy68 = false, usedaddy3C = false, addyRepeated = false, 
@@ -152,11 +145,43 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> tofArray_in,
 
     //4. check if SD card present on SPI bus
 
-    //5. check if only 4 sensors
+    //5. check and set values for VL53L0X sensors
+    if (!usedaddy68, !usedaddy3C, !addyRepeated, !xshutRepeated, 
+        !choreNameRepeated, !addyRangeBad)
+    {
+        for (int i = 0; i < tofArray_in.size(); i++)
+        {
+            pinMode(tofArray_in[i].xShutPort, OUTPUT);
+            digitalWrite(tofArray_in[i].xShutPort, LOW);
+        }
+        delay(10);
+        for (int i = 0; i < tofArray_in.size(); i++)
+        {
+            digitalWrite(tofArray_in[i].xShutPort, HIGH);
+        }
+        delay(10);
+        for (int i = 0; i < tofArray_in.size(); i++)
+        {
+            digitalWrite(tofArray_in[i].xShutPort, HIGH);
+            for (int j = 0; j < tofArray_in.size(); j++)
+            {
+                if (j != i)
+                    digitalWrite(tofArray_in[j].xShutPort, LOW);
+            }
+            if (!this->sens0.begin(tofArray_in[i].address)) {
+                this->errorPresent = true;
+                this->errorDescription.append(std::to_string(tofArray_in[i].address) 
+                    + " ToF address failed to initialize" + ERDELIM);
+            }
+            delay(10);
+        }
+    }
 
     //6. set all private variables
     if (!this->errorPresent)
     {
 
     }
+
+    this->constructorDone = true;
 }
