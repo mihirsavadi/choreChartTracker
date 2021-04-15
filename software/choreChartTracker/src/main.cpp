@@ -86,8 +86,13 @@ void setup() {
   // {
   //  digitalWrite(13, HIGH);
   // }
+
+  while(1)
+  {
+    
+  }
 }
 
-void loop() {
-
-}
+//dont use this, use while(1) in setup. this just keeps everything in the same
+// scope so code can be cleaner
+void loop() {}
