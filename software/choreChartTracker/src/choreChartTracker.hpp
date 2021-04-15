@@ -26,12 +26,9 @@ TODO:
 
 #include <Adafruit_VL53L0X.h>
 
-#include <string>
 #include <vector>
-#include <map>
-#include <algorithm>
 
-#define ERDELIM std::string(". ")
+#define ERDELIM String(". ")
 
 /*
     Table for assigning data to each time of flight sensor
@@ -44,11 +41,12 @@ TODO:
             - addresses cannot be repeated
             - choreNames cannot be repeated
             - addresses must be between 0x30 and 0x3F
+            - all address relted constraints are critical and must be checked!
 */
 struct tofUnit {
     uint16_t address;           //address of ToF sensor. word is 16bit.
     uint8_t xShutPort;      //arduino pin connected to sensor's xshut port
-    std::string choreName;  //name of assigned chore column
+    String choreName;  //name of assigned chore column
 };
 
 /*
@@ -59,7 +57,7 @@ struct tofUnit {
             - Names of any chore doer cannot be repeated
 */
 struct choreDoer {
-    std::string name; //name of chore doer
+    String name; //name of chore doer
     //sensor bounds for doers row location. upper is closer to sensor so lower.
     uint16_t upperBound, lowerBound;
 };
@@ -85,7 +83,7 @@ class choreChartTracker {
         bool const getConstructorDoneFlag();
 
         //  Getter for errors.
-        void const getError(bool &errorFlag, std::string &errorMessage);
+        void const getError(bool &errorFlag, String &errorMessage);
 
         //  sets DS1307 time. shouldn't be called during normal operation
         void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
@@ -95,7 +93,7 @@ class choreChartTracker {
         void setLogTime(uint8_t hour, uint8_t min, uint8_t sec);
 
         //  gets log time as string in format "Hour, Min, Sec"
-        std::string const getLogTime(); 
+        String const getLogTime(); 
 
         //  checks if time to log once. Must be placed in infinite while loop
         //   in main function.
@@ -113,7 +111,7 @@ class choreChartTracker {
         bool constructorDone = false;
 
         bool errorPresent;            //1 for yes 0 for no
-        std::string errorDescription; //default if no error
+        String errorDescription; //default if no error
 
         std::vector<tofUnit> tofArray;
         std::vector<choreDoer> choreDoers;
