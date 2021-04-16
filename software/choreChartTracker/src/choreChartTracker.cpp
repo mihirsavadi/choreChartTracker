@@ -102,6 +102,13 @@ uint16_t const choreChartTracker::getToFmillim(uint8_t sensorIndex)
             &this->tofArray[sensorIndex].sensorMeasureObject, 
             false
         );
+        // see https://documentation.help/VL53L0X-API/RangeStatusPage.html
+        // 1,2,3,4,5 are various different error messages.
+        // typical mm readouts are above 20ish anyway.
+        if (this->tofArray[sensorIndex].sensorMeasureObject.RangeStatus != 0)
+        {
+            return this->tofArray[sensorIndex].sensorMeasureObject.RangeStatus;
+        }
         readValue = readValue + 
                 this->tofArray[sensorIndex].sensorMeasureObject.RangeMilliMeter;
     }
@@ -165,19 +172,19 @@ void choreChartTracker::setLogTime(uint8_t hour, uint8_t min, uint8_t sec)
 //TODO
 String const choreChartTracker::getLogTime()
 {
-
+    return String("dummy");
 }
 
 //TODO
 String const choreChartTracker::getMostRecentLog()
 {
-
+    return String("dummy");
 }
 
 //TODO
 String const choreChartTracker::getEntireLog()
 {
-
+    return String("dummy");
 }
 
 //TODO
@@ -189,5 +196,5 @@ void choreChartTracker::logIfLogTime()
 //TODO
 bool const choreChartTracker::isLoggingIn30()
 {
-    
+    return true; //dummy
 }

@@ -94,7 +94,18 @@ class choreChartTracker {
 
         // Get distance reading from each sensor in mm.
         // Sets ErrorFlag and returns 0 if sensorIndex invalid.
-        // takes an average if readings for about 
+        // takes an average if readings for about 5 readings. Set this in method.
+        // If sensor has error returns error, see this
+        //      https://documentation.help/VL53L0X-API/RangeStatusPage.html
+        //  Value = 0 : Range Valid
+        //  Value = 1 : Sigma Fail
+        //  Value = 2 : Signal Fail
+        //  Value = 3 : Min Range Fail
+        //  Value = 4 : Phase Fail
+        //  Value = 5 : Hardware Fail
+        // Sensor will ignore everything closeer than about 20ish mm to it and
+        // report out as if it were 20ish mm anyway, so error values are
+        // definitely distinguishable from regular mm readouts.
         uint16_t const getToFmillim(uint8_t sensorIndex);
 
         // get the entire VL53L0X_RangingMeasurementData_t struct to get
