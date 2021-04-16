@@ -1,3 +1,6 @@
+#ifndef CHORECHARTTRACER_CPP
+#define CHORECHARTTRACER_CPP
+
 /*
 Mihir Savadi 
 started 11th April 2021
@@ -139,4 +142,6 @@ class choreChartTracker {
         uint8_t logHour, logMin, logSec;
 
         bool loggingIn30;
-};      
+};
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef OLEDDRIVER_CPP
+#define OLEDDRIVER_CPP
+
 /*
 Mihir Savadi 
 started 16th April 2021
@@ -14,14 +17,20 @@ control.
 
 class oledDriver {
     public:
-        
-        oledDriver(choreChartTracker &trackerObj);
+        //main constructor
+        oledDriver(choreChartTracker *trackerObj);
+
+        //function to just print ToF sensor outputs on the screen
+        void printToFData();
+
+        //function to check trackerobj for error and display them
+        bool checkshowError();
 
     private:
         choreChartTracker *trackerObject;
     
-        U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
+        U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2 = 
+            U8G2_SSD1306_128X64_NONAME_F_HW_I2C(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 };
 
-
-
+#endif

@@ -2,12 +2,7 @@
 #include <U8g2lib.h>
 
 #include "choreChartTracker.hpp"
-
-
-
-//macros to store number of chores and chore doers, which is fixed based on hardware
-#define CHORE_QTY 4
-#define DOER_QTY 4
+#include "oledDriver.hpp"
 
 Adafruit_VL53L0X sensor0 = Adafruit_VL53L0X();
 VL53L0X_RangingMeasurementData_t measure0;
@@ -15,13 +10,7 @@ VL53L0X_RangingMeasurementData_t measure0;
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 void setup() {
-
-  delay(5000);
-
   Serial.begin(9600);
-  Serial.println("poop");
-
-  u8g2.begin();
 
   tofUnit ToFarray[4];
   ToFarray[0].choreName = "dishes";
@@ -51,10 +40,9 @@ void setup() {
   choreDoers[3].lowerBound = 7;
   choreDoers[3].upperBound = 8;
 
-  delay(5000);
-
   Serial.println("starting constructor");
   choreChartTracker tracker(ToFarray, 4, choreDoers, 4);
+  oledDriver od(&tracker);
   Serial.println("done constructor");
 
   String errorDescription;
@@ -73,20 +61,7 @@ void setup() {
   // high frequency.
   while(1)
   {
-    u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_9x18_tr);
-    char str[50];
-
-    sprintf(str, "ToF_0: %d", tracker.getToFmillim(0));
-    u8g2.drawStr(0, 10, str);
-    sprintf(str, "ToF_1: %d", tracker.getToFmillim(1));
-    u8g2.drawStr(0, 25, str);
-    sprintf(str, "ToF_2: %d", tracker.getToFmillim(2));
-    u8g2.drawStr(0, 40, str);
-    sprintf(str, "ToF_3: %d", tracker.getToFmillim(3));
-    u8g2.drawStr(0, 55, str);
-
-    u8g2.sendBuffer();
+    od.printToFData();
   }
 
 }
