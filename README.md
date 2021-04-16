@@ -2,11 +2,6 @@
 
 Our apartment houses 4 undergrads, and in order to fairly and unambiguously delegate various chores we created a chore chart. Then, after about a year, with (some) time on our hands, we decided to be extra and build a chore chart tracker.
 
-### TODOS
-
-1. Error handling for displaying to OLED: should cycle between each delineated string of errors.
-
-
 ## The Chore Chart
 
 <p align="center">
