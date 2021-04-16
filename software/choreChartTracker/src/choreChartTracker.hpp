@@ -69,11 +69,6 @@ struct choreDoer {
 */
 class choreChartTracker {
     public:
-        //vegetable constructor, just so different things can make an empty
-        //  choreChartTracker object and pass to it a fully constructed 
-        //  choreChartTracker later.
-        choreChartTracker();
-
         //Only constructor. Must be called before using anything else.
         //  Checks all inputs meets constraints.
         //  Checks DS1307 address of 0x68 is present on i2c bus.

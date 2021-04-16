@@ -4,10 +4,6 @@
 
 #include "choreChartTracker.hpp"
 
-choreChartTracker::choreChartTracker()
-{
-    //nothing here
-}
 
 choreChartTracker::choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size, 
                           choreDoer *choreDoers_in, uint8_t choreDoers_size)

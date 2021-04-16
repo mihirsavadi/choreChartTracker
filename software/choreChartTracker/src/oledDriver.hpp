@@ -15,7 +15,7 @@ control.
 class oledDriver {
     public:
         
-        oledDriver(&choreChartTracker &trackerObj);
+        oledDriver(choreChartTracker &trackerObj);
 
     private:
         choreChartTracker *trackerObject;
