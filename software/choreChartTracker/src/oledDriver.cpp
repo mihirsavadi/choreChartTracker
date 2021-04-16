@@ -6,7 +6,6 @@
 
 ////////////////////////////// PUBLIC METHODS //////////////////////////////////
 
-
 oledDriver::oledDriver(choreChartTracker *trackerObj)
 {
     //first attach the trackerObj to the trackerObj pointer field
@@ -84,6 +83,8 @@ void oledDriver::loopdedoop()
         // Then above should display current time in YYYY:MM:DD:HH:MM:SS 
         // as well as the set log time ever day in HH:MM:SS
         // Then aside from this we can do whatever we want
+        // If you cant do anything cos there is no appropriate method from
+        // the choreChartTracker class then let me know Ill (mihir) integrate it.
     }
 }
 
