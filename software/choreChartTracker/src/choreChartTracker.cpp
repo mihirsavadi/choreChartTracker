@@ -57,8 +57,10 @@ choreChartTracker::choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size
     }
 
     //3. check if DS1307 is present on i2c bus
-
+        //TODO!
+        
     //4. check if SD card present on SPI bus
+        //TODO!
 
     //5. set all private variables
     if (!this->errorPresent)
