@@ -63,7 +63,8 @@ struct tofUnit {
 */
 struct choreDoer {
     String name; //name of chore doer
-    //sensor bounds for doers row location. upper is closer to sensor so lower.
+    //sensor bounds for doers row location in mm. 
+    // upper is closer to sensor so lower.
     uint16_t upperBound, lowerBound;
 };
 
@@ -99,6 +100,15 @@ class choreChartTracker {
         //  whatever further detaiilsfrom.
         // Sets ErrorFlag and returns empty struct if sensorIndex invalid.
         VL53L0X_RangingMeasurementData_t const getAllToFData(uint8_t sensorIndex);
+
+        // get an array of the persons row each chore token is currently sitting
+        // in. The array of data which this method returns information into must
+        // be passed into it as a pointer. Make sure to pass it to an array of
+        // undeclared size
+        // Returns size of the array being passed. This is just equal to the number
+        // of ToF sensors being used == tofArray_size, but including just for 
+        // convenience.
+        uint8_t const whichChoreInWhosRow(String *doersArray);
 
         //  sets DS1307 time. shouldn't be called during normal operation
         void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
