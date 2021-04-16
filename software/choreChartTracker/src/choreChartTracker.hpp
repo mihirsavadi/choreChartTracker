@@ -94,6 +94,7 @@ class choreChartTracker {
 
         // Get distance reading from each sensor in mm.
         // Sets ErrorFlag and returns 0 if sensorIndex invalid.
+        // takes an average if readings for about 
         uint16_t const getToFmillim(uint8_t sensorIndex);
 
         // get the entire VL53L0X_RangingMeasurementData_t struct to get
@@ -142,7 +143,7 @@ class choreChartTracker {
         //  At log time, store all the following into one new line in the SD
         //   in the following format
         //  <year>, <month>, <date>, <choreDoer1>, <chore1>, <choreDoer2>, <chore2>, ..., <choreDoerX>, <choreX>
-        void logIfTime();
+        void logIfLogTime();
 
         // getter for soon-to-log flag
         bool const isLoggingIn30();

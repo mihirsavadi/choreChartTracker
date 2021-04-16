@@ -94,11 +94,19 @@ uint16_t const choreChartTracker::getToFmillim(uint8_t sensorIndex)
         return 0;
     }
 
-    this->tofArray[sensorIndex].sensorObject.rangingTest(
-        &this->tofArray[sensorIndex].sensorMeasureObject, 
-        false
-    );
-    return this->tofArray[sensorIndex].sensorMeasureObject.RangeMilliMeter;
+    uint8_t readMax = 5;
+    uint16_t readValue = 0;
+    for (uint8_t i = 0; i < readMax; i++)
+    {
+        this->tofArray[sensorIndex].sensorObject.rangingTest(
+            &this->tofArray[sensorIndex].sensorMeasureObject, 
+            false
+        );
+        readValue = readValue + 
+                this->tofArray[sensorIndex].sensorMeasureObject.RangeMilliMeter;
+    }
+
+    return readValue/readMax;
 }
 
 VL53L0X_RangingMeasurementData_t const choreChartTracker::getAllToFData(
@@ -139,4 +147,47 @@ uint8_t const choreChartTracker::tokenInWhichRow(String *doersArray,
     choreNameArray = choreNameToSend;
 
     return this->tofArray_size;
+}
+
+//TODO
+void choreChartTracker::setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
+                uint8_t hour, uint8_t min, uint8_t sec)
+{
+
+}
+
+//TODO
+void choreChartTracker::setLogTime(uint8_t hour, uint8_t min, uint8_t sec)
+{
+
+}
+
+//TODO
+String const choreChartTracker::getLogTime()
+{
+
+}
+
+//TODO
+String const choreChartTracker::getMostRecentLog()
+{
+
+}
+
+//TODO
+String const choreChartTracker::getEntireLog()
+{
+
+}
+
+//TODO
+void choreChartTracker::logIfLogTime()
+{
+
+}
+
+//TODO
+bool const choreChartTracker::isLoggingIn30()
+{
+    
 }
