@@ -112,7 +112,7 @@ VL53L0X_RangingMeasurementData_t const choreChartTracker::getAllToFData(
     return this->tofArray[sensorIndex].sensorMeasureObject;
 }
 
-uint8_t const choreChartTracker::whichChoreInWhosRow(String *doersArray)
+uint8_t const choreChartTracker::tokenInWhichRow(String *doersArray)
 {
     String doersArrayToSend[this->tofArray_size];
 

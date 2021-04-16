@@ -104,11 +104,12 @@ class choreChartTracker {
         // get an array of the persons row each chore token is currently sitting
         // in. The array of data which this method returns information into must
         // be passed into it as a pointer. Make sure to pass it to an array of
-        // undeclared size
+        // undeclared size. Each element is a string = persons name assigned to
+        // that row.
         // Returns size of the array being passed. This is just equal to the number
         // of ToF sensors being used == tofArray_size, but including just for 
         // convenience.
-        uint8_t const whichChoreInWhosRow(String *doersArray);
+        uint8_t const tokenInWhichRow(String *doersArray);
 
         //  sets DS1307 time. shouldn't be called during normal operation
         void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
