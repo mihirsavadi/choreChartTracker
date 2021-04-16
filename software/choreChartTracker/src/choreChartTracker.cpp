@@ -122,6 +122,8 @@ uint8_t const choreChartTracker::tokenInWhichRow(String *doersArray,
 
     for(uint8_t  i = 0; i < this->tofArray_size; i++)
     {
+        choreNameToSend[i] = this->tofArray[i].choreName;
+        doersArrayToSend[i] = String("choreTokenInvalidPosition");
         for (uint8_t j = 0; j < this->choreDoers_size; j++)
         {
             uint16_t distance = this->getToFmillim(i);
@@ -129,7 +131,6 @@ uint8_t const choreChartTracker::tokenInWhichRow(String *doersArray,
                     distance <= this->choreDoers[j].lowerBound)
             {
                 doersArrayToSend[i] = this->choreDoers[j].name;
-                choreNameToSend[i] = this->tofArray[j].choreName;
             }
         }
     }
