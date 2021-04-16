@@ -66,17 +66,16 @@ void setup() {
     Serial.println(errorDescription);
   }
 
+  //use this instead of void loop just to maintain singular scope and keep things
+  // clean. Make sure there is nothing significantly blocking here. 
+  // The choreChartTracker object's logIfTime() method, which is central to the
+  // logging (the primary function of this board), must be called at a decently
+  // high frequency.
   while(1)
   {
-
-    // Serial.println(String(tracker.getToFreading(0)) + "\t" + 
-    //                String(tracker.getToFreading(1)) + "\t" +
-    //                String(tracker.getToFreading(2)) + "\t" +
-    //                String(tracker.getToFreading(3)));
-
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_9x18_tr);
-    char str[10];
+    char str[50];
 
     sprintf(str, "ToF_0: %d", tracker.getToFmillim(0));
     u8g2.drawStr(0, 10, str);

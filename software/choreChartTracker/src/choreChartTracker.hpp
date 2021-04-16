@@ -105,7 +105,13 @@ class choreChartTracker {
         void setLogTime(uint8_t hour, uint8_t min, uint8_t sec);
 
         //  gets log time as string in format "Hour, Min, Sec"
-        String const getLogTime(); 
+        String const getLogTime();
+
+        // returns the most recent line in the SD cards log directory verbatim.
+        String const getMostRecentLog();
+        
+        // returns entire log, with each line being \n seperated.
+        String const getEntireLog();
 
         //  checks if time to log once. Must be placed in infinite while loop
         //   in main function.
@@ -114,7 +120,7 @@ class choreChartTracker {
         //  At log time, store all the following into one new line in the SD
         //   in the following format
         //  <year>, <month>, <date>, <choreDoer1>, <chore1>, <choreDoer2>, <chore2>, ..., <choreDoerX>, <choreX>
-        void run();
+        void logIfTime();
 
         // getter for soon-to-log flag
         bool const isLoggingIn30();
@@ -133,8 +139,4 @@ class choreChartTracker {
         uint8_t logHour, logMin, logSec;
 
         bool loggingIn30;
-
-        //  HELPER FUNCTIONS
-        //checks if peripherals are gucci
-        void peripheralHealthCheck();
 };      

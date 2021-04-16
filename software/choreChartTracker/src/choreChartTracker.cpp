@@ -4,14 +4,6 @@
 
 #include "choreChartTracker.hpp"
 
-///////////////////////// PRIVATE METHODS //////////////////////////////////////
-void choreChartTracker::peripheralHealthCheck() 
-{
-    
-}
-
-///////////////////////// PUBLIC METHODS ///////////////////////////////////////
-
 choreChartTracker::choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size, 
                           choreDoer *choreDoers_in, uint8_t choreDoers_size)
 {
