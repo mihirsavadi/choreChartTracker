@@ -18,7 +18,10 @@ control.
 class oledDriver {
     public:
         //main constructor
-        oledDriver(choreChartTracker *trackerObj);
+        oledDriver();
+
+        //call this immediately after choreChartTrackerIsRun
+        void setup(choreChartTracker *trackerObj);
 
         //function to just print ToF sensor outputs on the screen
         void printToFData();

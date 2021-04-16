@@ -6,13 +6,23 @@
 
 ////////////////////////////// PUBLIC METHODS //////////////////////////////////
 
-oledDriver::oledDriver(choreChartTracker *trackerObj)
+oledDriver::oledDriver()
+{
+    //begin the local ug82 class instance
+    this->u8g2.begin();
+
+    //clear the buffer and set the font for startup report outs
+    this->u8g2.clearBuffer();
+    this->u8g2.setFont(u8g2_font_9x18_tr);
+
+    this->u8g2.drawStr(0, 25, "STARTING UP!");
+    this->u8g2.sendBuffer();
+}
+
+void oledDriver::setup(choreChartTracker *trackerObj)
 {
     //first attach the trackerObj to the trackerObj pointer field
     this->trackerObject = trackerObj;
-
-    //begin the local ug82 class instance
-    this->u8g2.begin();
 
     //clear the buffer and set the font for startup report outs
     this->u8g2.clearBuffer();

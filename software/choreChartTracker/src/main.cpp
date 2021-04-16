@@ -41,8 +41,9 @@ void setup() {
   choreDoers[3].upperBound = 8;
 
   Serial.println("starting constructor");
+  oledDriver od;
   choreChartTracker tracker(ToFarray, 4, choreDoers, 4);
-  oledDriver od(&tracker);
+  od.setup(&tracker);
   Serial.println("done constructor");
 
   String errorDescription;
