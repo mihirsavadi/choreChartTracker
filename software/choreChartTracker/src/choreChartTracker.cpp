@@ -43,7 +43,7 @@ choreChartTracker::choreChartTracker(std::vector<tofUnit> &tofArray_in,
     //     }
     //     if (!this->sens0.begin(tofArray_in[i].address)) {
     //         this->errorPresent = true;
-    //         this->errorDescription.append(std::to_string(tofArray_in[i].address) 
+    //         this->errorDescription.concat(String(tofArray_in[i].address) 
     //             + " ToF address failed to initialize" + ERDELIM);
     //     }
     //     delay(10);
