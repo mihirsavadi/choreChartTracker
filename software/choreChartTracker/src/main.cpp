@@ -10,6 +10,8 @@ VL53L0X_RangingMeasurementData_t measure0;
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 void setup() {
+  oledDriver od;
+
   Serial.begin(9600);
 
   tofUnit ToFarray[4];
@@ -41,7 +43,6 @@ void setup() {
   choreDoers[3].upperBound = 8;
 
   Serial.println("starting constructor");
-  oledDriver od;
   choreChartTracker tracker(ToFarray, 4, choreDoers, 4);
   od.setup(&tracker);
   Serial.println("done constructor");
