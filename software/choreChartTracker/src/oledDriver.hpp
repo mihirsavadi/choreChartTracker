@@ -24,6 +24,7 @@ class oledDriver {
         void printToFData();
 
         //function to check trackerobj for error and display them
+        // should be run once every loop of the infinite while loop.
         bool checkshowError();
 
     private:

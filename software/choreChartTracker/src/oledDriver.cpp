@@ -17,13 +17,6 @@ oledDriver::oledDriver(choreChartTracker *trackerObj)
     this->u8g2.setFont(u8g2_font_9x18_tr);
 
     //read if trackerObj has errors or not. If has errors display them
-    // TODO:
-    // the errors are delineated with the ERDELIM macro. Fit all the error messages
-    // nicely into the screen. So firstly display "start up errors present", wait
-    // have a second, then display the first error, and then the next with the 
-    // same delay etc. If the error is way too long, either make the font smaller
-    // or do whatever idk, or cut the sentence short, append with '...', move
-    // to next screen and continue message but first prepending '...'. 
     String errors;
     if (this->trackerObject->getError(errors))
     {  
@@ -32,9 +25,10 @@ oledDriver::oledDriver(choreChartTracker *trackerObj)
         u8g2.drawStr(0, 40, "Present");
         u8g2.drawStr(0, 55, ":'(");
 
-        delay(500);
+        delay(3000);
 
         //display error handling code here
+        this->checkshowError();
     }
     else
     {
@@ -42,13 +36,12 @@ oledDriver::oledDriver(choreChartTracker *trackerObj)
         u8g2.drawStr(0, 25, "Errors");
         u8g2.drawStr(0, 40, "NOT Present");
         u8g2.drawStr(0, 55, ":)");
-        delay(500);
     }
 
     //finally send the buffer
     this->u8g2.sendBuffer();
     //small delay before moving on and doing anything else
-    delay(2000);
+    delay(3000);
 }
 
 void oledDriver::printToFData()
@@ -67,4 +60,27 @@ void oledDriver::printToFData()
     u8g2.drawStr(0, 55, str);
 
     u8g2.sendBuffer();
+}
+
+// TODO:
+// the errors are delineated with the ERDELIM macro. Fit all the error messages
+// nicely into the screen. So firstly display "start up errors present", wait
+// for 2 seconds, then display the first error, and then the next with the 
+// same delay etc. If the error is way too long, either make the font smaller
+// or do whatever idk, or cut the sentence short, append with '...', move
+// to next screen and continue message but first prepending '...'. 
+bool oledDriver::checkshowError()
+{
+    String errors;
+    if (this->trackerObject->getError(errors))
+    {
+        u8g2.clearBuffer();
+        u8g2.setFont(u8g2_font_9x18_tr);
+
+        //display error handling code here
+
+        return true;
+    }
+
+    return false;
 }
