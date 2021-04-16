@@ -106,10 +106,18 @@ class choreChartTracker {
         // be passed into it as a pointer. Make sure to pass it to an array of
         // undeclared size. Each element is a string = persons name assigned to
         // that row.
+        // Also returns in a corresponding array the name of the chore each persons
+        // toekn is in
         // Returns size of the array being passed. This is just equal to the number
         // of ToF sensors being used == tofArray_size, but including just for 
         // convenience.
-        uint8_t const tokenInWhichRow(String *doersArray);
+        // So to illustrate:
+        //  doersArray == {mihir, mihir. vignesh, nathan}
+        //  choreName == {dishes, emptyDishwasher, trash, recycle}
+        //  methodReturnValue = 4
+        // Note that the order of the chore names will follow exactly the order
+        //  of ToFUnits were passed as a tofArray_in array into the constructor.
+        uint8_t const tokenInWhichRow(String *doersArray, String *choreNameArray);
 
         //  sets DS1307 time. shouldn't be called during normal operation
         void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
