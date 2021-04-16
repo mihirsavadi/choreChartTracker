@@ -12,55 +12,100 @@ void choreChartTracker::peripheralHealthCheck()
 
 ///////////////////////// PUBLIC METHODS ///////////////////////////////////////
 
-choreChartTracker::choreChartTracker(std::vector<tofUnit> &tofArray_in, 
-                                        std::vector<choreDoer> &choreDoers_in) 
+choreChartTracker::choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size, 
+                          choreDoer *choreDoers_in, uint8_t choreDoers_size)
 {
-    //1. check for critical tofArray_in constraints
-    
+    //1. check for critical tofArray_in constraints. then assign objects.
+    for (uint8_t i = 0; i < tofArray_size; i++)
+    {
+        if (tofArray_in[i].address == 0x68 || tofArray_in[i].address == 0x3C ||
+            tofArray_in[i].address < 0x30 || tofArray_in[i].address > 0x3F)
+        {
+            this->errorPresent = true;
+            this->errorDescription.concat(String(tofArray_in[i].address) + 
+                " is bad" + ERDELIM);
+        }
+    }
+
+    //2. check and set values for VL53L0X sensors
+    for (uint8_t i = 0; i < tofArray_size; i++)
+    {
+        pinMode(tofArray_in[i].xShutPort, OUTPUT);
+        digitalWrite(tofArray_in[i].xShutPort, LOW);
+    }
+    delay(10);
+    for (uint8_t i = 0; i < tofArray_size; i++)
+    {
+        digitalWrite(tofArray_in[i].xShutPort, HIGH);
+    }
+    delay(10);
+    for (uint8_t i = 0; i < tofArray_size; i++)
+    {
+        digitalWrite(tofArray_in[i].xShutPort, HIGH);
+        for (uint8_t j = 0; j < tofArray_size; j++)
+        {
+            if (j > i)
+                digitalWrite(tofArray_in[j].xShutPort, LOW);
+        }
+        if (!tofArray_in[i].sensorObject.begin(tofArray_in[i].address)) {
+            this->errorPresent = true;
+            this->errorDescription.concat("ToF address " + 
+            String(tofArray_in[i].address) + " failed to initialize" + ERDELIM);
+        }
+        delay(10);
+    }
+
     //3. check if DS1307 is present on i2c bus
 
     //4. check if SD card present on SPI bus
 
-    //5. check and set values for VL53L0X sensors
-    // for (size_t i = 0; i < tofArray_in.size(); i++)
-    // {
-    //     pinMode(tofArray_in[i].xShutPort, OUTPUT);
-    //     digitalWrite(tofArray_in[i].xShutPort, LOW);
-    // }
-    // delay(10);
-    // for (size_t i = 0; i < tofArray_in.size(); i++)
-    // {
-    //     digitalWrite(tofArray_in[i].xShutPort, HIGH);
-    // }
-    // delay(10);
-    // for (size_t i = 0; i < tofArray_in.size(); i++)
-    // {
-    //     digitalWrite(tofArray_in[i].xShutPort, HIGH);
-    //     for (size_t j = 0; j < tofArray_in.size(); j++)
-    //     {
-    //         if (j != i)
-    //             digitalWrite(tofArray_in[j].xShutPort, LOW);
-    //     }
-    //     if (!this->sens0.begin(tofArray_in[i].address)) {
-    //         this->errorPresent = true;
-    //         this->errorDescription.concat(String(tofArray_in[i].address) 
-    //             + " ToF address failed to initialize" + ERDELIM);
-    //     }
-    //     delay(10);
-    // }
-
-    //6. set all private variables
+    //5. set all private variables
     if (!this->errorPresent)
     {
         this->tofArray = tofArray_in;
+        this->tofArray_size = tofArray_size;
         this->choreDoers = choreDoers_in;
+        this->choreDoers_size = choreDoers_size;
     }
 
     this->constructorDone = true;
 }
 
-void const choreChartTracker::getError(bool &errorFlag, String &errorMessage)
+bool const choreChartTracker::getConstructorDoneFlag()
 {
-    errorFlag = this->errorPresent;
+    return this->constructorDone;
+}
+
+bool const choreChartTracker::getError(String &errorMessage)
+{
     errorMessage = errorDescription;
+    return this->errorPresent;
+}
+
+uint16_t const choreChartTracker::getToFmillim(uint8_t sensorIndex)
+{
+    if (sensorIndex > this->tofArray_size)
+    {
+        this->errorPresent = true;
+        this->errorDescription.concat("reading requested from sensor indexbeyond what is present" + ERDELIM);
+        return 0;
+    }
+
+    this->tofArray[sensorIndex].sensorObject.rangingTest(
+        &this->tofArray[sensorIndex].sensorMeasureObject, 
+        false
+    );
+    return this->tofArray[sensorIndex].sensorMeasureObject.RangeMilliMeter;
+}
+
+VL53L0X_RangingMeasurementData_t const choreChartTracker::getAllToFData(uint8_t sensorIndex)
+{
+    if (sensorIndex > this->tofArray_size)
+    {
+        this->errorPresent = true;
+        this->errorDescription.concat("details requested from sensor index beyond what is present" + ERDELIM);
+        return VL53L0X_RangingMeasurementData_t();
+    }
+
+    return this->tofArray[sensorIndex].sensorMeasureObject;
 }

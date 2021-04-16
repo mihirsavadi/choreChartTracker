@@ -44,9 +44,11 @@ TODO:
             - all address relted constraints are critical and must be checked!
 */
 struct tofUnit {
-    uint16_t address;           //address of ToF sensor. word is 16bit.
-    uint8_t xShutPort;      //arduino pin connected to sensor's xshut port
+    uint16_t address;  //address of ToF sensor. word is 16bit.
+    uint8_t xShutPort; //arduino pin connected to sensor's xshut port
     String choreName;  //name of assigned chore column
+    Adafruit_VL53L0X sensorObject = Adafruit_VL53L0X();
+    VL53L0X_RangingMeasurementData_t sensorMeasureObject;
 };
 
 /*
@@ -76,14 +78,24 @@ class choreChartTracker {
         //  Sets private error fields set accordingly.
         //  Multiple errors are concatenated, delineated with full-stops + space
         //  If no errors, initializes all peripherals.
-        choreChartTracker(std::vector<tofUnit> &tofArray_in, 
-                          std::vector<choreDoer> &choreDoers_in );
+        choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size, 
+                          choreDoer *choreDoers_in, uint8_t choreDoers_size);
         
         // getter for constructor done flag
         bool const getConstructorDoneFlag();
 
-        //  Getter for errors.
-        void const getError(bool &errorFlag, String &errorMessage);
+        //  Getter for errors. returns if errorflag is set or not. if not no
+        // message will be present.
+        bool const getError(String &errorMessage);
+
+        // Get distance reading from each sensor in mm.
+        // Sets ErrorFlag and returns 0 if sensorIndex invalid.
+        uint16_t const getToFmillim(uint8_t sensorIndex);
+
+        // get the entire VL53L0X_RangingMeasurementData_t struct to get
+        //  whatever further detaiilsfrom.
+        // Sets ErrorFlag and returns empty struct if sensorIndex invalid.
+        VL53L0X_RangingMeasurementData_t const getAllToFData(uint8_t sensorIndex);
 
         //  sets DS1307 time. shouldn't be called during normal operation
         void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
@@ -110,11 +122,13 @@ class choreChartTracker {
     private:
         bool constructorDone = false;
 
-        bool errorPresent;            //1 for yes 0 for no
-        String errorDescription; //default if no error
+        bool errorPresent = false;       //1 for yes 0 for no
+        String errorDescription = ""; //default if no error
 
-        std::vector<tofUnit> tofArray;
-        std::vector<choreDoer> choreDoers;
+        tofUnit *tofArray;
+        uint8_t tofArray_size;
+        choreDoer *choreDoers;
+        uint8_t choreDoers_size;
 
         uint8_t logHour, logMin, logSec;
 
@@ -123,11 +137,4 @@ class choreChartTracker {
         //  HELPER FUNCTIONS
         //checks if peripherals are gucci
         void peripheralHealthCheck();
-
-        //Peripheral Library Functions
-        Adafruit_VL53L0X sens0 = Adafruit_VL53L0X();
-        Adafruit_VL53L0X sens1 = Adafruit_VL53L0X();
-        Adafruit_VL53L0X sens2 = Adafruit_VL53L0X();
-        Adafruit_VL53L0X sens3 = Adafruit_VL53L0X();
-        VL53L0X_RangingMeasurementData_t mes0, mes1, mes2, mes3;
 };      
