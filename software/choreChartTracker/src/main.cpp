@@ -61,7 +61,8 @@ void setup() {
   // high frequency.
   while(1)
   {
-    od.printToFData();
+    od.printToFData(); //this is just here temporarily for testing
+    // od.loopdedoop(); 
   }
 
 }

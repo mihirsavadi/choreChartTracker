@@ -4,6 +4,9 @@
 
 #include "oledDriver.hpp"
 
+////////////////////////////// PUBLIC METHODS //////////////////////////////////
+
+
 oledDriver::oledDriver(choreChartTracker *trackerObj)
 {
     //first attach the trackerObj to the trackerObj pointer field
@@ -20,10 +23,10 @@ oledDriver::oledDriver(choreChartTracker *trackerObj)
     String errors;
     if (this->trackerObject->getError(errors))
     {  
-        u8g2.drawStr(0, 10, "StartUp");
-        u8g2.drawStr(0, 25, "Errors");
-        u8g2.drawStr(0, 40, "Present");
-        u8g2.drawStr(0, 55, ":'(");
+        this->u8g2.drawStr(0, 10, "StartUp");
+        this->u8g2.drawStr(0, 25, "Errors");
+        this->u8g2.drawStr(0, 40, "Present");
+        this->u8g2.drawStr(0, 55, ":'(");
 
         delay(3000);
 
@@ -32,35 +35,59 @@ oledDriver::oledDriver(choreChartTracker *trackerObj)
     }
     else
     {
-        u8g2.drawStr(0, 10, "StartUp");
-        u8g2.drawStr(0, 25, "Errors");
-        u8g2.drawStr(0, 40, "NOT Present");
-        u8g2.drawStr(0, 55, ":)");
+        this->u8g2.drawStr(0, 10, "StartUp");
+        this->u8g2.drawStr(0, 25, "Errors");
+        this->u8g2.drawStr(0, 40, "NOT Present");
+        this->u8g2.drawStr(0, 55, ":)");
     }
 
     //finally send the buffer
     this->u8g2.sendBuffer();
+
     //small delay before moving on and doing anything else
     delay(3000);
 }
 
 void oledDriver::printToFData()
 {
-    u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_9x18_tr);
+    this->u8g2.clearBuffer();
+    this->u8g2.setFont(u8g2_font_9x18_tr);
     char str[50];
 
     sprintf(str, "ToF_0: %d", this->trackerObject->getToFmillim(0));
-    u8g2.drawStr(0, 10, str);
+    this->u8g2.drawStr(0, 10, str);
     sprintf(str, "ToF_1: %d", this->trackerObject->getToFmillim(1));
-    u8g2.drawStr(0, 25, str);
+    this->u8g2.drawStr(0, 25, str);
     sprintf(str, "ToF_2: %d", this->trackerObject->getToFmillim(2));
-    u8g2.drawStr(0, 40, str);
+    this->u8g2.drawStr(0, 40, str);
     sprintf(str, "ToF_3: %d", this->trackerObject->getToFmillim(3));
-    u8g2.drawStr(0, 55, str);
+    this->u8g2.drawStr(0, 55, str);
 
-    u8g2.sendBuffer();
+    this->u8g2.sendBuffer();
 }
+
+void oledDriver::loopdedoop()
+{
+    String errors;
+    if (this->trackerObject->getError(errors))
+    {
+        this->checkshowError();
+    }
+    else
+    {
+        // TODO:
+        // put normal display stuff d2d here.
+        // follow wireframe design if we ever end up discussing that.
+        // ideally at the bottom should be "X X X X" where each X corresponds
+        // to which person's row the choreToken is currently in, so for us
+        // it could either be L, M, V, or N.
+        // Then above should display current time in YYYY:MM:DD:HH:MM:SS 
+        // as well as the set log time ever day in HH:MM:SS
+        // Then aside from this we can do whatever we want
+    }
+}
+
+////////////////////////////// PRIVATE METHODS /////////////////////////////////
 
 // TODO:
 // the errors are delineated with the ERDELIM macro. Fit all the error messages
@@ -74,11 +101,12 @@ bool oledDriver::checkshowError()
     String errors;
     if (this->trackerObject->getError(errors))
     {
-        u8g2.clearBuffer();
-        u8g2.setFont(u8g2_font_9x18_tr);
+        this->u8g2.clearBuffer();
+        this->u8g2.setFont(u8g2_font_9x18_tr);
 
         //display error handling code here
 
+        this->u8g2.sendBuffer();
         return true;
     }
 

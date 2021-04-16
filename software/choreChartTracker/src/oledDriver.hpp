@@ -23,15 +23,21 @@ class oledDriver {
         //function to just print ToF sensor outputs on the screen
         void printToFData();
 
-        //function to check trackerobj for error and display them
-        // should be run once every loop of the infinite while loop.
-        bool checkshowError();
+        // TODO: see cpp for details
+        //Main method to be run once every loop of the while loop in main().
+        void loopdedoop();
+
 
     private:
         choreChartTracker *trackerObject;
     
         U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2 = 
             U8G2_SSD1306_128X64_NONAME_F_HW_I2C(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
+
+        // TODO: see cpp for details
+        //function to check trackerobj for error and display them
+        // should be run once every loop of the infinite while loop.
+        bool checkshowError();
 };
 
 #endif
