@@ -56,7 +56,9 @@ TODOS:
 
 ### Hardware Notes
 
-Currently using the Seeeduino XIAO as the microcontroller on the solderable breadboard. Its running into lots of issues with the bootloader and dissapearing from the COM ports. Just around the time of integrating RTC code and testing on the OLED (18Apr'21) the XIAO decided to brick its bootloader again. After miraculously fixing it with several trial and error resets into DFU mode previously, repair doesnt seem like a completely deterministic process. Apparently this is a [known issue](https://forum.seeedstudio.com/t/odyssey-x86j4105-ubuntu-20-4-no-dev-ttyacm0-and-no-seeeduino-listed-under-lsusb/254322/19) which can be fixed, but it is a greater pain than it is worth. At this point most features have been integrated fairly smoothly, with this pain-of-a-board being the bottle neck.  
+Currently using the Seeeduino XIAO as the microcontroller on the solderable breadboard. Its running into lots of issues with the bootloader and dissapearing from the COM ports. Just around the time of integrating RTC code and testing on the OLED (18Apr'21) the XIAO decided to brick its bootloader again. After miraculously fixing it with several trial and error resets into DFU mode previously, repair doesnt seem like a completely deterministic process. Apparently this is a [known issue](https://forum.seeedstudio.com/t/odyssey-x86j4105-ubuntu-20-4-no-dev-ttyacm0-and-no-seeeduino-listed-under-lsusb/254322/19) which can be fixed, but it is a greater pain than it is worth. At this point most features have been integrated fairly smoothly, with this pain-of-a-uC being the bottle neck.  
+
+Also with the solderable breadboard one of the power rails on the edges was decoupled from the power rails on the upper side and used as the I2C bus, which means the entire signal line was exposed and uninsulated. This is not a big deal because of the systems indoor nature, but when handling it with my hands and accidentally touching the I2C bus lines it was cool to see the OLED glitch out yet still maintain functionality somewhat. Should probably make a PCB.
 
 TODOS:
 
