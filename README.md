@@ -53,7 +53,6 @@ look at files in anything besides the /src and the natively handled libraries in
 TODOS:  
 
 - Integrate SD Card reader and logging functionality, which will wrap-up main software functionality.
-- Fill out the rest readme for software documentation. Update method and class comments for Doxygen compatibility.
 
 ### Hardware Notes
 
