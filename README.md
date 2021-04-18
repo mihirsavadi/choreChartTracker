@@ -43,10 +43,17 @@ Haven't reached this part yet. Need to collect more data. Lots of potential insi
 - Vignesh Sinha     : also software stuff.
 - Nathan Strominger : moral support, creator of bomb-ass food, all around lad.
 
-### choreChartTracker Software Notes
+## TODOS and Notes
+
+### Software Notes
 
 For some reason the platformIO IDE makes it a pain to get its project linker to 
 look at files in anything besides the /src and the natively handled libraries in /.pio/libdeps. This is why the /src directory here has all the source files that we wrote bundled directly together with main.cpp - not clean, but not a big deal either since there isnt a lot of stuff.
 
-TODO: Fill out the rest readme for software documentation. Update method and class comments for Doxygen compatibility.
+TODOS:  
 
+- Fill out the rest readme for software documentation. Update method and class comments for Doxygen compatibility.
+
+### Hardware Notes
+
+Currently using the Seeeduino XIAO as the microcontroller on the solderable breadboard. Its running into lots of issues with the bootloader and dissapearing from the COM ports. Apparantly this is a [known issue](https://forum.seeedstudio.com/t/odyssey-x86j4105-ubuntu-20-4-no-dev-ttyacm0-and-no-seeeduino-listed-under-lsusb/254322/19) which can be fixed, but it is a greater pain than it is worth. At this point most features have been integrated fairly smoothly. Might just make a PCB with a Teensy4.0 instead.  
