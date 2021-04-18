@@ -10,12 +10,12 @@ choreChartTracker as intended in its most basic form. Sort of like an API.
     - vl53L0X array of sensors (default address of 0x29, needs to be reassigned on startup)
     - DS1307 real time clock 
     - SD card reader.
-OLED screen control is omitted. This class provides getter functions and returns
-errors, which can be parsed and displayed on the OLED in main(){}.
+OLED screen control is omitted as it is not part of the systems core function. 
+Its abstracted away in another class
 
 Only one instance of this class should be created before entering infinite loop.
 I could make this a singleton class, but that adds extra semantic complexity that
-I dont really want to deal with.
+I dont really want to deal with atm.
 
 TODO: 
     1. test all peripherals isolated first, understand their interfaces.
@@ -29,8 +29,6 @@ TODO:
 
 #include <Adafruit_VL53L0X.h>
 #include <RTClib.h>
-
-#include <vector>
 
 #define ERDELIM String(". ")
 
@@ -64,6 +62,7 @@ struct tofUnit {
 */
 struct choreDoer {
     String name; //name of chore doer
+    
     //sensor bounds for doers row location in mm. 
     // upper is closer to sensor so lower.
     uint16_t upperBound, lowerBound;
@@ -74,100 +73,100 @@ struct choreDoer {
 */
 class choreChartTracker {
     public:
-        //Only constructor. Must be called before using anything else.
-        //  Checks all inputs meets constraints.
-        //  Checks DS1307 address of 0x68 is present on i2c bus.
-        //  Checks if SD card present on SPI bus. 
-        //  Current hardware only supports 4 ToF sensors so choreDoer vector
-        //  must only be of size=4.
-        //  Sets private error fields set accordingly.
-        //  Multiple errors are concatenated, delineated with full-stops + space
-        //  If no errors, initializes all peripherals.
+        /*  Only constructor. Must be called before using anything else.
+            Checks all inputs meets constraints.
+            Checks DS1307 address of 0x68 is present on i2c bus.
+            Checks if SD card present on SPI bus. 
+            Current hardware only supports 4 ToF sensors so choreDoer vector
+            must only be of size=4.
+            Sets private error fields set accordingly.
+            Multiple errors are concatenated, delineated with full-stops + space
+            If no errors, initializes all peripherals. */
         choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size, 
                           choreDoer *choreDoers_in, uint8_t choreDoers_size);
         
-        // getter for constructor done flag
+        /*  Getter for constructor done flag */
         bool const getConstructorDoneFlag();
 
-        //  Getter for errors. returns if errorflag is set or not. if not no
-        // message will be present.
+        /*  Getter for errors. returns if errorflag is set or not. if not no
+            message will be present. */
         bool const getError(String &errorMessage);
 
-        // Get distance reading from each sensor in mm.
-        // Sets ErrorFlag and returns 0 if sensorIndex invalid.
-        // takes an average if readings for about 5 readings. Set this in method.
-        // If sensor has error returns error, see this
-        //      https://documentation.help/VL53L0X-API/RangeStatusPage.html
-        //  Value = 0 : Range Valid
-        //  Value = 1 : Sigma Fail
-        //  Value = 2 : Signal Fail
-        //  Value = 3 : Min Range Fail
-        //  Value = 4 : Phase Fail
-        //  Value = 5 : Hardware Fail
-        // Sensor will ignore everything closeer than about 20ish mm to it and
-        // report out as if it were 20ish mm anyway, so error values are
-        // definitely distinguishable from regular mm readouts.
+        /*  Get distance reading from each sensor in mm.
+            Sets ErrorFlag and returns 0 if sensorIndex invalid.
+            takes an average if readings for about 5 readings. Set this in method.
+            If sensor has error returns error, see this
+                https://documentation.help/VL53L0X-API/RangeStatusPage.html
+            Value = 0 : Range Valid
+            Value = 1 : Sigma Fail
+            Value = 2 : Signal Fail
+            Value = 3 : Min Range Fail
+            Value = 4 : Phase Fail
+            Value = 5 : Hardware Fail
+            Sensor will ignore everything closeer than about 20ish mm to it and
+            report out as if it were 20ish mm anyway, so error values are
+            definitely distinguishable from regular mm readouts. */
         uint16_t const getToFmillim(uint8_t sensorIndex);
 
-        // get the entire VL53L0X_RangingMeasurementData_t struct to get
-        //  whatever further detaiilsfrom.
-        // Sets ErrorFlag and returns empty struct if sensorIndex invalid.
+        /*  Get the entire VL53L0X_RangingMeasurementData_t struct to get
+            whatever further detaiils from.
+            Sets ErrorFlag and returns empty struct if sensorIndex invalid. */
         VL53L0X_RangingMeasurementData_t const getAllToFData(uint8_t sensorIndex);
 
-        // get an array of the persons row each chore token is currently sitting
-        // in. The array of data which this method returns information into must
-        // be passed into it as a pointer. Make sure to pass it to an array of
-        // undeclared size. Each element is a string = persons name assigned to
-        // that row.
-        // Also returns in a corresponding array the name of the chore each persons
-        // toekn is in
-        // Returns size of the array being passed. This is just equal to the number
-        // of ToF sensors being used == tofArray_size, but including just for 
-        // convenience.
-        // So to illustrate:
-        //  doersArray == {mihir, mihir. vignesh, nathan}
-        //  choreName == {dishes, emptyDishwasher, trash, recycle}
-        //  methodReturnValue = 4
-        // Note that the order of the chore names will follow exactly the order
-        //  of ToFUnits were passed as a tofArray_in array into the constructor.
+        /* Get an array of the persons row each chore token is currently sitting
+           in. The array of data which this method returns information into must
+           be passed into it as a pointer. Make sure to pass it to an array of
+           undeclared size. Each element is a string = persons name assigned to
+           that row.
+           Also returns in a corresponding array the name of the chore each persons
+           toekn is in
+           Returns size of the array being passed. This is just equal to the number
+           of ToF sensors being used == tofArray_size, but including just for 
+           convenience.
+           So to illustrate:
+            doersArray == {mihir, mihir. vignesh, nathan}
+            choreName == {dishes, emptyDishwasher, trash, recycle}
+            methodReturnValue = 4
+           Note that the order of the chore names will follow exactly the order
+            of ToFUnits were passed as a tofArray_in array into the constructor. */
         uint8_t const tokenInWhichRow(String *doersArray, String *choreNameArray);
 
-        //  sets DS1307 time. Shouldn't be called during normal operation outside
-        // of class, but leaving as public function for flexibility.
+        /*  Sets DS1307 time. Shouldn't be called during normal operation outside
+            of class, but leaving as public function for flexibility. */
         void setRTCtime(uint16_t year, uint8_t month, uint8_t date, 
                         uint8_t hour, uint8_t min, uint8_t sec);
 
-        //  sets DS1307 time automatically based on date and time the arduino 
-        // sketch was compiled. Shouldn't be called during normal operation outside
-        // of class, but leaving as public function for flexibility.
+        /*  Sets DS1307 time automatically based on date and time the arduino 
+           sketch was compiled. Shouldn't be called during normal operation outside
+           of class, but leaving as public function for flexibility. */
         void autoSetRTCtime();
 
-        //  set time to log once every day
+        /*  Set time to log once every day */
         void setLogTime(uint8_t hour, uint8_t min, uint8_t sec);
 
-        //  gets log time as string in format "Hour:Min:Sec"
+        /*  Gets log time as string in format "Hour:Min:Sec"    */
         String const getLogTime();
 
-        // get current time and date from rtc as string in format 
-        //  "YY:MM:DD:Hour:Min:Sec"
+        /*  Gets current time and date from rtc as string in format 
+            "YY:MM:DD:Hour:Min:Sec" */
         String const getCurrentTimeDate();
 
-        // returns the most recent line in the SD cards log directory verbatim.
+        /*  Returns the most recent line in the SD cards log directory verbatim.*/
         String const getMostRecentLog();
         
-        // returns entire log, with each line being \n seperated.
+        /*  Returns entire log, with each line being \n seperated. */
         String const getEntireLog();
 
-        //  checks if time to log once. Must be placed in infinite while loop
-        //   in main function.
-        //  Once called, within 30 seconds of log time, appropriate field should
-        //   should be set.
-        //  At log time, store all the following into one new line in the SD
-        //   in the following format
-        //  <year>, <month>, <date>, <choreDoer1>, <chore1>, <choreDoer2>, <chore2>, ..., <choreDoerX>, <choreX>
+        /*  Checks if time to log once. Must be placed in infinite while loop
+            in main function.
+            Once called, within 30 seconds of log time, appropriate field should
+            should be set.
+            At log time, store all the following into one new line in the SD
+            in the following format
+            <year>, <month>, <date>, <choreDoer1>, <chore1>, <choreDoer2>, <chore2>, ..., <choreDoerX>, <choreX> */
         void logIfLogTime();
 
-        // getter for soon-to-log flag
+        /*  Getter for soon-to-log flag */
         bool const isLoggingIn30();
 
     private:
