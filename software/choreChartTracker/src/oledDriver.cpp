@@ -57,20 +57,23 @@ void oledDriver::setup(choreChartTracker *trackerObj)
     delay(3000);
 }
 
-void oledDriver::printToFData()
+void oledDriver::printToFandTimeData()
 {
     this->u8g2.clearBuffer();
-    this->u8g2.setFont(u8g2_font_9x18_tr);
+    this->u8g2.setFont(u8g2_font_9x15_tr);
     char str[50];
 
     sprintf(str, "ToF_0: %d", this->trackerObject->getToFmillim(0));
     this->u8g2.drawStr(0, 10, str);
     sprintf(str, "ToF_1: %d", this->trackerObject->getToFmillim(1));
-    this->u8g2.drawStr(0, 25, str);
+    this->u8g2.drawStr(0, 20, str);
     sprintf(str, "ToF_2: %d", this->trackerObject->getToFmillim(2));
-    this->u8g2.drawStr(0, 40, str);
+    this->u8g2.drawStr(0, 30, str);
     sprintf(str, "ToF_3: %d", this->trackerObject->getToFmillim(3));
-    this->u8g2.drawStr(0, 55, str);
+    this->u8g2.drawStr(0, 40, str);
+
+    this->trackerObject->getCurrentTimeDate().toCharArray(str, 50);
+    this->u8g2.drawStr(0, 50, str);
 
     this->u8g2.sendBuffer();
 }

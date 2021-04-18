@@ -28,6 +28,7 @@ TODO:
 #include <SPI.h>
 
 #include <Adafruit_VL53L0X.h>
+#include <RTClib.h>
 
 #include <vector>
 
@@ -131,15 +132,25 @@ class choreChartTracker {
         //  of ToFUnits were passed as a tofArray_in array into the constructor.
         uint8_t const tokenInWhichRow(String *doersArray, String *choreNameArray);
 
-        //  sets DS1307 time. shouldn't be called during normal operation
-        void setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
+        //  sets DS1307 time. Shouldn't be called during normal operation outside
+        // of class, but leaving as public function for flexibility.
+        void setRTCtime(uint16_t year, uint8_t month, uint8_t date, 
                         uint8_t hour, uint8_t min, uint8_t sec);
 
-        //  set time to log once a day
+        //  sets DS1307 time automatically based on date and time the arduino 
+        // sketch was compiled. Shouldn't be called during normal operation outside
+        // of class, but leaving as public function for flexibility.
+        void autoSetRTCtime();
+
+        //  set time to log once every day
         void setLogTime(uint8_t hour, uint8_t min, uint8_t sec);
 
-        //  gets log time as string in format "Hour, Min, Sec"
+        //  gets log time as string in format "Hour:Min:Sec"
         String const getLogTime();
+
+        // get current time and date from rtc as string in format 
+        //  "YY:MM:DD:Hour:Min:Sec"
+        String const getCurrentTimeDate();
 
         // returns the most recent line in the SD cards log directory verbatim.
         String const getMostRecentLog();
@@ -162,7 +173,7 @@ class choreChartTracker {
     private:
         bool constructorDone = false;
 
-        bool errorPresent = false;       //1 for yes 0 for no
+        bool errorPresent = false;    //1 for yes 0 for no
         String errorDescription = ""; //default if no error
 
         tofUnit *tofArray;
@@ -173,6 +184,8 @@ class choreChartTracker {
         uint8_t logHour, logMin, logSec;
 
         bool loggingIn30;
+
+        RTC_DS1307 rtc;
 };
 
 #endif

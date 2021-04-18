@@ -23,8 +23,9 @@ class oledDriver {
         //call this immediately after choreChartTrackerIsRun
         void setup(choreChartTracker *trackerObj);
 
-        //function to just print ToF sensor outputs on the screen
-        void printToFData();
+        //function to just print ToF sensor outputs on the screen and RTC time
+        // below. Use for debugging.
+        void printToFandTimeData();
 
         // TODO: see cpp for details
         //Main method to be run once every loop of the while loop in main().

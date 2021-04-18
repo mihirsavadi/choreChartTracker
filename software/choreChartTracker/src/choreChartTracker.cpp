@@ -57,7 +57,18 @@ choreChartTracker::choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size
     }
 
     //3. check if DS1307 is present on i2c bus
-        //TODO!
+        if (! rtc.begin())
+        {
+            this->errorPresent = true;
+            this->errorDescription.concat("Could not find RTC" + ERDELIM);
+        }
+        if (!rtc.isrunning())
+        {
+            this->errorPresent = true;
+            this->errorDescription.concat("RTC not running. Need to set time.");
+            this->autoSetRTCtime();
+            // this->setLogTime(0, 0, 0); //use this if auto doesnt suffice.
+        }
         
     //4. check if SD card present on SPI bus
         //TODO!
@@ -156,26 +167,41 @@ uint8_t const choreChartTracker::tokenInWhichRow(String *doersArray,
     return this->tofArray_size;
 }
 
-//TODO
-void choreChartTracker::setRTCtime(uint8_t year, uint8_t month, uint8_t date, 
+void choreChartTracker::setRTCtime(uint16_t year, uint8_t month, uint8_t date, 
                 uint8_t hour, uint8_t min, uint8_t sec)
-{
-
+{    
+    DateTime adjustTime(year, month, date, hour, min, sec);
+    this->rtc.adjust(adjustTime);
 }
 
-//TODO
+void choreChartTracker::autoSetRTCtime()
+{
+    this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+}
+
 void choreChartTracker::setLogTime(uint8_t hour, uint8_t min, uint8_t sec)
 {
-
+    this->logHour = hour;
+    this->logMin = min;
+    this->logSec = sec;
 }
 
-//TODO
 String const choreChartTracker::getLogTime()
 {
-    return String("dummy");
+    return this->logHour + String(":") + this->logMin + String(":") + this->logSec;
 }
 
-//TODO
+String const choreChartTracker::getCurrentTimeDate()
+{
+    DateTime now = this->rtc.now();
+
+    String currentTime(now.year() + String(":") + now.month() + String(":") + now.day() + 
+        String(":") + now.hour() + String(":") + now.minute() + String(":") + 
+        now.second());
+
+    return currentTime;
+}
+
 String const choreChartTracker::getMostRecentLog()
 {
     return String("dummy");
@@ -193,8 +219,14 @@ void choreChartTracker::logIfLogTime()
 
 }
 
-//TODO
 bool const choreChartTracker::isLoggingIn30()
 {
-    return true; //dummy
+    DateTime now = rtc.now();
+
+    if (now.hour() == this->logHour && now.minute() == this->logMin)
+    {
+        return true;
+    }
+
+    return false;
 }

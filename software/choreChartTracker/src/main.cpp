@@ -63,8 +63,8 @@ void setup() {
   // high frequency.
   while(1)
   {
-    od.printToFData(); //this is just here temporarily for testing
-    // od.loopdedoop(); 
+    od.printToFandTimeData(); //this is just here temporarily for testing
+    // od.loopdedoop();
   }
 
 }
