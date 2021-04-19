@@ -44,10 +44,13 @@ void setup() {
   String errorDescription;
   bool errorFlag = tracker.getError(errorDescription);
 
-  Serial.println((errorFlag) ? "Error Flag High" : "Error Flag Low");
   if (errorFlag)
   {
-    Serial.println(errorDescription);
+    Serial.println("ErrorFlagHIGH: " + errorDescription);
+  }
+  else
+  {
+    Serial.println("ErrorFlagLOW");
   }
 
   //use this instead of void loop just to maintain singular scope and keep things
