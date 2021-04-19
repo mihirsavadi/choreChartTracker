@@ -64,5 +64,5 @@ Also with the solderable breadboard one of the power rails on the edges was deco
 
 TODOS:
 
-- Make a PCB with a Teensy4.0 instead, to aleviate the lack of reliability with the seeeduino XIAO.  
+- Make a PCB with a Teensy4.0 instead, to aleviate the lack of reliability with the seeeduino XIAO. Maybe make an i2c connector array with molex or some other standardized 4-wire terminated cable, to connect directly with separate tiny daughter boards that can be placed independently.
 - Make a mount for choreChartTracker board to white-board
