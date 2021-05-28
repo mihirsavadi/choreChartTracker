@@ -21,10 +21,15 @@ The first goal was to create a reliable way to track and log the movement of eac
 ![Alt text](./pics_vids/boardfrontish.jpg)
 ![Alt text](./pics_vids/boardtop.jpg)
 ![Alt text](./pics_vids/boardbottom.jpg)
+_^^^ all these pictures are of the old hardware rev1 implementation_
 
-Our speific chore chart has 4 columns for each chore - the position of the chore-tokens within each of these columns are tracked by measuring their distances to the board via our time of flight sensors (these are mindblowingly amazing little devices). Because each cell in our table (where a chore-token would go) is predetermined and fixed, we can use the distance data from each time of flight sensor to know which room-mate's row each chore-token is currently in. This data is queried and logged once a day into a micro sd card in a simple csv text file, along with the current time and date as provided by our real time clock (RTC). The RTC has a backup coin-cell battery that allows the RTC IC to keep time even if the main board looses power (e.g. if we unplugged it for whatever reason). This allows for a convenient way to set and forget the time during initial programming of the board. The OLED allows for an easy and flexible way to display whatever we want, like time, date, derived information from logged data, memes, whatever.
+![Alt text](./pics_vids/boardtop_rev2.png)
+![Alt text](./pics_vids/boarddiag_rev2.png)
+_^^^ all these pictures are of the new hardware rev2 implementation from Diptrace's 3D renderer. Hoping to get these with a black silkscreen though_
 
-Chore charts can be row-expanded within the Time-of-Flight sensor's sensing distance limits; and column-expanded by adding more ToF sensors. The [core libraries (see ./src)](./software/choreChartTracker/src) encapsulate all the logic into an easy to use API - so far confirmed with between 1 and 16 sensors (therefore 1 to 16 columns).
+Our specific chore chart has 4 columns for each chore - the position of the chore-tokens within each of these columns are tracked by measuring their distances to the board via our time of flight sensors (these are mindblowingly amazing little devices). Because each cell in our table (where a chore-token would go) is predetermined and fixed, we can use the distance data from each time of flight sensor to know which room-mate's row each chore-token is currently in. This data is queried and logged once a day into a micro sd card in a simple csv text file, along with the current time and date as provided by our real time clock (RTC). The RTC has a backup coin-cell battery that allows the RTC IC to keep time even if the main board looses power (e.g. if we unplugged it for whatever reason). This allows for a convenient way to set and forget the time during initial programming of the board. The OLED allows for an easy and flexible way to display whatever we want, like time, date, derived information from logged data, memes, whatever.
+
+Chore charts can be row-expanded within the Time-of-Flight sensor's sensing distance limits; and column-expanded by adding more ToF sensors. The top-level libraries (see ./software/PICKVERSIONDIRECTORY/src) encapsulate all the logic into an easy to use API - so far confirmed with between 1 and 16 sensors (therefore 1 to 16 columns).
 
 All source code is [available under the "software" subdirectory](./software). The schematic, bill of materials, and other hardware details [are available in the "hardware" subdirectory](./hardware).
 
@@ -55,14 +60,19 @@ look at files in anything besides the /src and the natively handled libraries in
 TODOS:  
 
 - Integrate SD Card reader and logging functionality, which will wrap-up main software functionality.
+- Hardware Rev2: Make a simple wifi broadcasted server using the ESP32's wifi libraries.
+- Hardware Rev2: integrate code for the capacitive touch navigation buttons using the ESP32's touch libraries. Integrate this into the OLED code.  
 
 ### Hardware Notes
 
-Currently using the Seeeduino XIAO as the microcontroller on the solderable breadboard. Its running into lots of issues with the bootloader and dissapearing from the COM ports. Just around the time of integrating RTC code and testing on the OLED (18Apr'21) the XIAO decided to brick its bootloader again. After miraculously fixing it with several trial and error resets into DFU mode previously, repair doesnt seem like a completely deterministic process. Apparently this is a [known issue](https://forum.seeedstudio.com/t/odyssey-x86j4105-ubuntu-20-4-no-dev-ttyacm0-and-no-seeeduino-listed-under-lsusb/254322/19) which can be fixed, but it is a greater pain than it is worth. At this point most features have been integrated fairly smoothly, with this pain-of-a-uC being the bottle neck.  
-
-Also with the solderable breadboard one of the power rails on the edges was decoupled from the power rails on the upper side and used as the I2C bus, which means the entire signal line was exposed and uninsulated. This is not a big deal because of the systems indoor nature, but when handling it with my hands and accidentally touching the I2C bus lines it was cool to see the OLED glitch out yet still maintain functionality somewhat. Should probably make a PCB.
-
 TODOS:
 
-- Make a PCB with a Teensy4.0 instead, to aleviate the lack of reliability with the seeeduino XIAO. Maybe make an i2c connector array with molex or some other standardized 4-wire terminated cable, to connect directly with separate tiny daughter boards that can be placed independently.
-- Make a mount for choreChartTracker board to white-board
+- Order the Hardware Rev2 PCB's, ESP32 PICO Devi-Kit board, and assemble everything.
+- Make a mount for choreChartTracker Hardware Rev2 board to white-board.
+
+Old Notes:
+
+- 19th April:  
+  Currently using the Seeeduino XIAO as the microcontroller on the solderable breadboard. Its running into lots of issues with the bootloader and dissapearing from the COM ports. Just around the time of integrating RTC code and testing on the OLED (18Apr'21) the XIAO decided to brick its bootloader again. After miraculously fixing it with several trial and error resets into DFU mode previously, repair doesnt seem like a completely deterministic process. Apparently this is a [known issue](https://forum.seeedstudio.com/t/odyssey-x86j4105-ubuntu-20-4-no-dev-ttyacm0-and-no-seeeduino-listed-under-lsusb/254322/19) which can be fixed, but it is a greater pain than it is worth. At this point most features have been integrated fairly smoothly, with this pain-of-a-uC being the bottle neck.
+
+  Also with the solderable breadboard one of the power rails on the edges was decoupled from the power rails on the upper side and used as the I2C bus, which means the entire signal line was exposed and uninsulated. This is not a big deal because of the systems indoor nature, but when handling it with my hands and accidentally touching the I2C bus lines it was cool to see the OLED glitch out yet still maintain functionality somewhat. Should probably make a PCB.  
