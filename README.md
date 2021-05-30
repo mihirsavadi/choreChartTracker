@@ -39,9 +39,9 @@ Haven't reached this part yet. Need to collect more data. Lots of potential insi
 
 ## Potential Improvements
 
-1. A [wifi module](https://www.adafruit.com/product/4201) in the future to allow for remote access of logged data (maybe even a make lightweight server). This would allow for a lot of extra cool stuff.
+- [OLD: Hardware Rev2 implements an ESP32 uC with integrated Bluetooth and Wifi] A [wifi module](https://www.adafruit.com/product/4201) in the future to allow for remote access of logged data (maybe even a make lightweight server). This would allow for a lot of extra cool stuff.
 
-2. Port over all the hardware into an actual PCB, with extendable daughter cards to allow for adding even more columns if needed. Would only really do this if for whatever reason demand appears for it. For now the solderable breadboard is perfect - its permanentness is adequate whilst still allowing for additions or modifications when/where needed.
+- [OLD: Hardware Rev2 is a PCB] Port over all the hardware into an actual PCB, with extendable daughter cards to allow for adding even more columns if needed. Would only really do this if for whatever reason demand appears for it. For now the solderable breadboard is perfect - its permanentness is adequate whilst still allowing for additions or modifications when/where needed.  
 
 ## Peeps
 
@@ -68,7 +68,7 @@ TODOS:
 TODOS:
 
 - Order the Hardware Rev2 PCB's, ESP32 PICO Devi-Kit board, and assemble everything.
-- Make a mount for choreChartTracker Hardware Rev2 board to white-board.
+- Make a mount for choreChartTracker Hardware Rev2 board to white-board.  
 
 Old Notes:
 
