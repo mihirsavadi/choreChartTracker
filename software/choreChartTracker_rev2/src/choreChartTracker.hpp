@@ -28,7 +28,6 @@ TODO:
 #include <SPI.h>
 
 #include <Adafruit_VL53L0X.h>
-#include <RTClib.h>
 
 #define ERDELIM String(". ")
 
@@ -131,23 +130,13 @@ class choreChartTracker {
             of ToFUnits were passed as a tofArray_in array into the constructor. */
         uint8_t const tokenInWhichRow(String *doersArray, String *choreNameArray);
 
-        /*  Sets DS1307 time. Shouldn't be called during normal operation outside
-            of class, but leaving as public function for flexibility. */
-        void setRTCtime(uint16_t year, uint8_t month, uint8_t date, 
-                        uint8_t hour, uint8_t min, uint8_t sec);
-
-        /*  Sets DS1307 time automatically based on date and time the arduino 
-           sketch was compiled. Shouldn't be called during normal operation outside
-           of class, but leaving as public function for flexibility. */
-        void autoSetRTCtime();
-
         /*  Set time to log once every day */
         void setLogTime(uint8_t hour, uint8_t min, uint8_t sec);
 
         /*  Gets log time as string in format "Hour:Min:Sec"    */
         String const getLogTime();
 
-        /*  Gets current time and date from rtc as string in format 
+        /*  Gets current time and date from wifi network as string in format 
             "YY:MM:DD:Hour:Min:Sec" */
         String const getCurrentTimeDate();
 
@@ -183,8 +172,6 @@ class choreChartTracker {
         uint8_t logHour, logMin, logSec;
 
         bool loggingIn30;
-
-        RTC_DS1307 rtc;
 };
 
 #endif

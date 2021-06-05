@@ -191,14 +191,10 @@ String const choreChartTracker::getLogTime()
     return this->logHour + String(":") + this->logMin + String(":") + this->logSec;
 }
 
+//TODO: setup for WiFi
 String const choreChartTracker::getCurrentTimeDate()
 {
-    DateTime now = this->rtc.now();
-
-    String currentTime(now.year() + String(":") + now.month() + String(":") + now.day() + 
-        String(":") + now.hour() + String(":") + now.minute() + String(":") + 
-        now.second());
-
+    String currentTime = "bum";
     return currentTime;
 }
 
