@@ -24,6 +24,8 @@ TODO:
 */
 
 #include <Arduino.h>
+
+#include <SD.h>
 #include <Wire.h>
 #include <SPI.h>
 
