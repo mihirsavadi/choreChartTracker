@@ -54,14 +54,16 @@ Haven't reached this part yet. Need to collect more data. Lots of potential insi
 
 ### Software Notes
 
-For some reason the platformIO IDE makes it a pain to get its project linker to 
-look at files in anything besides the /src and the natively handled libraries in /.pio/libdeps. This is why the /src directory here has all the source files that we wrote bundled directly together with main.cpp - not clean, but not a big deal either since there isnt a lot of stuff.
+Hardware rev2 moved to using a ESP32 Pico Kit development board. Organizing dependencies with this board in platform-io and getting simple things to compile was becoming a huge pain. So I moved everything to just use the stock arduino IDE. I have included the libraries used in ["software/choreChartTracker_rev2/otherlibrariesjustincase"](./software/choreChartTracker_rev2/otherlibrariesjustincase) just for the sake of portability. Be sure to install these libraries within your arduino IDE before attempting to compile.
 
 TODOS:  
 
 - Integrate SD Card reader and logging functionality, which will wrap-up main software functionality.
 - Hardware Rev2: Make a simple wifi broadcasted server using the ESP32's wifi libraries.
 - Hardware Rev2: integrate code for the capacitive touch navigation buttons using the ESP32's touch libraries. Integrate this into the OLED code.  
+
+Old Notes:
+- For some reason the platformIO IDE makes it a pain to get its project linker to look at files in anything besides the /src and the natively handled libraries in /.pio/libdeps. This is why the /src directory here has all the source files that we wrote bundled directly together with main.cpp - not clean, but not a big deal either since there isnt a lot of stuff
 
 ### Hardware Notes
 
