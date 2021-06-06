@@ -55,25 +55,11 @@ choreChartTracker::choreChartTracker(tofUnit *tofArray_in, uint8_t tofArray_size
         this->errorPresent = true;
         this->errorDescription.concat("choreChartTracker object passed a nullpointer for ToFarray and choreDoer array" + ERDELIM);
     }
-
-    //3. check if DS1307 is present on i2c bus
-        if (!rtc.begin())
-        {
-            this->errorPresent = true;
-            this->errorDescription.concat("Could not find RTC" + ERDELIM);
-        }
-        if (!rtc.isrunning())
-        {
-            this->errorPresent = true;
-            this->errorDescription.concat("RTC not running. Need to set time.");
-            this->autoSetRTCtime();
-            // this->setLogTime(0, 0, 0); //use this if auto doesnt suffice.
-        }
         
-    //4. check if SD card present on SPI bus
+    //3. check if SD card present on SPI bus
         //TODO!
 
-    //5. set all private variables
+    //4. set all private variables
     if (!this->errorPresent)
     {
         this->tofArray = tofArray_in;
@@ -167,18 +153,6 @@ uint8_t const choreChartTracker::tokenInWhichRow(String *doersArray,
     return this->tofArray_size;
 }
 
-void choreChartTracker::setRTCtime(uint16_t year, uint8_t month, uint8_t date, 
-                uint8_t hour, uint8_t min, uint8_t sec)
-{    
-    DateTime adjustTime(year, month, date, hour, min, sec);
-    this->rtc.adjust(adjustTime);
-}
-
-void choreChartTracker::autoSetRTCtime()
-{
-    this->rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-}
-
 void choreChartTracker::setLogTime(uint8_t hour, uint8_t min, uint8_t sec)
 {
     this->logHour = hour;
@@ -217,12 +191,12 @@ void choreChartTracker::logIfLogTime()
 
 bool const choreChartTracker::isLoggingIn30()
 {
-    DateTime now = rtc.now();
+    // DateTime now = rtc.now();
 
-    if (now.hour() == this->logHour && now.minute() == this->logMin)
-    {
-        return true;
-    }
+    // if (now.hour() == this->logHour && now.minute() == this->logMin)
+    // {
+    //     return true;
+    // }
 
     return false;
 }
