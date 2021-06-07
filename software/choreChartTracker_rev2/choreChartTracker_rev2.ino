@@ -13,9 +13,8 @@
 #include "oledDriver.hpp"
 
 void setup() {
-  oledDriver od;
 
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   tofUnit ToFarray[4];
   ToFarray[0].choreName = "dishes";
@@ -47,6 +46,7 @@ void setup() {
 
   Serial.println("starting constructor");
   choreChartTracker tracker(ToFarray, 4, choreDoers, 4);
+  oledDriver od;
   od.setup(&tracker);
   Serial.println("done constructor");
 
@@ -67,12 +67,9 @@ void setup() {
   // The choreChartTracker object's logIfTime() method, which is central to the
   // logging (the primary function of this board), must be called at a decently
   // high frequency.
-  int counter = 0;
   while(1)
   {
-    Serial.println("hello world " + counter);
-    counter++;
-    // od.printToFandTimeData(); //this is just here temporarily for testing
+    od.printToFandTimeData(); //this is just here temporarily for testing
     // od.loopdedoop();
   }
 
