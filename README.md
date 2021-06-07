@@ -58,6 +58,7 @@ Hardware rev2 moved to using a ESP32 Pico Kit development board. Organizing depe
 
 TODOS:  
 
+- The ESP32 Pico Kit footprint in Diptrace is completely wrong, which means the rev2 PCB is completely screwed. Refer to [this link](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/hw-reference/esp32/get-started-pico-kit-1.html) and fix the footprint and symbol fixed: label everything.   
 - Rewrite all code from scratch for hardware rev2. ESP32 Pico Kit keeps throwing "Guru Meditation Error: Core 1 panic'ed (LoadProhibited). Exception was unhandled." errors, implying memory usage and access errors. I have no clue where this is coming from, but its also happening with basic adafruit library examples for the VL53L0X senors. Might have to ditch this board and stick with a teensy. So much trouble just to end back at a teensy.
 - Integrate SD Card reader and logging functionality, which will wrap-up main software functionality.
 - Hardware Rev2: Make a simple wifi broadcasted server using the ESP32's wifi libraries.
