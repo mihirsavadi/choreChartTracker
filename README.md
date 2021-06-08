@@ -69,6 +69,8 @@ Old Notes:
 
 ### Hardware Notes  
 
+- [Hardware rev2] The usb-c port placed so far back is too low for connector clearance. Connecting a usb cable causes the connecter to have to lift up at an angle because of the vertical thickness of the connector, tearing the pins. It has to be placed closer to the edge for clearance.
+
 Old Notes:
 
 - 19th April:  
