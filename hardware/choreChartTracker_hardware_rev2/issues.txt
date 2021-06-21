@@ -1,0 +1,4 @@
+- the i2c lines were causing bad i2c signal transmissions. Likely due to poor routing and too thin traces. Tested root cause by replicating circuit in breadboard which worked fine, and the i2c address finder sketch sometimes returning nothing and sometimes printing all i2c addresses being available - signalling high capacitance and excess distortion of signals.
+- forgot to add RTC (real time clock).
+- SD card on SPI works fine though.
+- Bad placement of USB-C connector throughole thing - not far enough. Better to just provide ziptie strain relief holes.
