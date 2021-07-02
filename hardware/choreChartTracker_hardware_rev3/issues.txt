@@ -1,0 +1,2 @@
+- repeated USB-C connector issues from rev2 *facepalm*. It needs to be on the edge of the board for enough vertical clearance for the plug. It cant be inboard as it is now.
+- i2c still screwed. Hooked up to an oscope/logic analyzer and found shark-fin like pulses on the SDA and SCL lines which indicate way too much capacitance/too high pullup resistances. See issues_img1.png, issues_img2.png, and issues_img3.png for screenshots of what the signals looked like on my oscope/logic analyzer. Making traces thicker from rev2 did not fix this.
