@@ -11,10 +11,8 @@
   on-off project like this. Hence, rev2 will try to keep everything in one
   file, with a clear flow of commands.
 
-  TODO: why vl53l0x max distance so low. make longer.
   TODO: test and store max and min vl53l0x distances.
-  TODO: why OLED is not working.
-  TODO: test SD card with one plugged in
+  TODO: test SD card with one plugged in.
 */
 
 /* include dependencies here */
@@ -127,28 +125,47 @@ void setup_VL53L0Xarray()
 /* read VL53l0X sensor data */
 uint16_t const get_mm_VL53l0X(uint8_t sensorIndex)
 {
-    if (sensorIndex > 3)
+    uint16_t range;
+    if (sensorIndex == 0) 
     {
-        errorMessage.concat("sensor index greater than 3 requested, bad!" + ERDELIM);
-        return 6;
-    }
-    else
-    {
-        VL53L0X_RangingMeasurementData_t sensorMeasureObject;
-        (sensorIndex == 0) ? VL53l0X_0.rangingTest(&sensorMeasureObject, false):
-        (sensorIndex == 1) ? VL53l0X_1.rangingTest(&sensorMeasureObject, false):
-        (sensorIndex == 2) ? VL53l0X_2.rangingTest(&sensorMeasureObject, false):
-        VL53l0X_3.rangingTest(&sensorMeasureObject, false);
-
-        // see https://documentation.help/VL53L0X-API/RangeStatusPage.html
-        // 1,2,3,4,5 are various different error messages.
-        // typical mm readouts are above 20ish anyway.
-        if (sensorMeasureObject.RangeStatus != 0)
+        range = VL53l0X_0.readRange();
+        if (range > 8000)
         {
-            return sensorMeasureObject.RangeStatus;
+            return VL53l0X_0.readRangeStatus();
         }
-        return sensorMeasureObject.RangeMilliMeter;
+        return range;
     }
+    if (sensorIndex == 1) 
+    {
+        range = VL53l0X_1.readRange();
+        if (range > 8000)
+        {
+            return VL53l0X_1.readRangeStatus();
+        }
+        return range;
+    }
+    if (sensorIndex == 2) 
+    {
+        range = VL53l0X_2.readRange();
+        if (range > 8000)
+        {
+            return VL53l0X_2.readRangeStatus();
+        }
+        return range;
+    }
+    if (sensorIndex == 3) 
+    {
+        range = VL53l0X_3.readRange();
+        if (range > 8000)
+        {
+            return VL53l0X_3.readRangeStatus();
+        }
+        return range;
+    }
+
+    //return value is sensor index is invalid/not accounted for
+    errorMessage.concat("sensor index greater than 3 requested, bad!" + ERDELIM);
+    return 6;
 }
 
 /* Setup RTC */
@@ -213,8 +230,10 @@ void setup()
 
     setup_OLED();
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_9x18_tr);
-    u8g2.drawStr(0, 45, "Initializing Baby!");
+    u8g2.setFont(u8g2_font_9x18B_tf );
+    u8g2.drawStr(0, 30, "Initializing");
+    u8g2.drawStr(0, 45, "   Baby!");
+    u8g2.sendBuffer();
 
     setup_VL53L0Xarray();
     setup_RTC();
@@ -222,14 +241,10 @@ void setup()
 
     Serial.println("Initialization Done!");
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_9x18_tr);
-    u8g2.drawStr(0, 25, "Initialization done");
-    u8g2.drawStr(0, 45, "you impatient ho.");
-
-    while(1)
-    {
-        Serial.println(String(get_mm_VL53l0X(0)) + ", " + String(get_mm_VL53l0X(1)) + ", " + String(get_mm_VL53l0X(2)) + ", " + String(get_mm_VL53l0X(3)));
-    }
+    u8g2.setFont(u8g2_font_9x18B_tf );
+    u8g2.drawStr(0, 30, "Initialization");
+    u8g2.drawStr(0, 45, "    done!");
+    u8g2.sendBuffer();
 
     //enter infinite while loop that contains the central functionality.
     while(1)
@@ -239,7 +254,7 @@ void setup()
         // there is an error with OLED.
         if (errorMessage.length() != 0)
         {
-            Serial.println("ERRORS --> " + errorMessage);
+            Serial.println("ERRORS PRESENT --> " + errorMessage);
             u8g2.clearBuffer();
             u8g2.setFont(u8g2_font_9x18_tr);
             u8g2.drawStr(0, 25, "ERROR PRESENT!");
