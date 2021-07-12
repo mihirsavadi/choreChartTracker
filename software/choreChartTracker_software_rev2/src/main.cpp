@@ -10,9 +10,6 @@
   chore/doer expandability - these are hardly required for an arduino based
   on-off project like this. Hence, rev2 will try to keep everything in one
   file, with a clear flow of commands.
-
-  TODO: test and store max and min vl53l0x distances.
-  TODO: test SD card with one plugged in. use sd card in car rn.
 */
 
 /* include dependencies here */
@@ -162,7 +159,7 @@ vl53l0xArray get_mm_VL53l0X()
     return outputArray;
 }
 
-/* distance to choreDoer */
+/* distance to choreDoer. ADJUST MARKER DISTANCES HERE*/
 enum choreDoerEnum{LUCAS, MIHIR, NATHAN, VIGNESH, INVALID};
 struct chartStat {
     const String chore0_name = "Dishes";
@@ -415,7 +412,8 @@ bool updateGoogleSheets()
 }
 
 /* Detects when it is time to log. It returns a value in seconds to the next
-    log time. Returns this value as an unsigned int. When done */
+    log time. Returns this value as an unsigned int.
+    SET LOG TIME HERE */
 uint32_t timeToLog()
 {
     //log time is 5am everyday
@@ -539,10 +537,44 @@ void displayNormal()
     // otherwise just display normal shit
     if (timeToLog() > 30)
     {
+        chartStat curStat = whoIsChoreDoer();
+        String LucasChore = "????";
+        String MihirChore = "????";
+        String VigChore   = "????";
+        String NatChore   = "????";
+
+        String Dishes     = "DISH";
+        String DishWasher = "DWAS";
+        String Trash      = "TRAS";
+        String Recycling  = "RECY";
+        
+        if      (curStat.chore0_doer == LUCAS)   LucasChore = Dishes;
+        else if (curStat.chore0_doer == MIHIR)   MihirChore = Dishes;
+        else if (curStat.chore0_doer == VIGNESH) VigChore   = Dishes;
+        else if (curStat.chore0_doer == NATHAN)  NatChore   = Dishes;
+        if      (curStat.chore1_doer == LUCAS)   LucasChore = DishWasher;
+        else if (curStat.chore1_doer == MIHIR)   MihirChore = DishWasher;
+        else if (curStat.chore1_doer == VIGNESH) VigChore   = DishWasher;
+        else if (curStat.chore1_doer == NATHAN)  NatChore   = DishWasher;
+        if      (curStat.chore2_doer == LUCAS)   LucasChore = Trash;
+        else if (curStat.chore2_doer == MIHIR)   MihirChore = Trash;
+        else if (curStat.chore2_doer == VIGNESH) VigChore   = Trash;
+        else if (curStat.chore2_doer == NATHAN)  NatChore   = Trash;
+        if      (curStat.chore3_doer == LUCAS)   LucasChore = Recycling;
+        else if (curStat.chore3_doer == MIHIR)   MihirChore = Recycling;
+        else if (curStat.chore3_doer == VIGNESH) VigChore   = Recycling;
+        else if (curStat.chore3_doer == NATHAN)  NatChore   = Recycling;
+
+        String choreDoerLine = LucasChore + " " + MihirChore + " " + 
+            VigChore + " " + NatChore;
+        char choreDoerLineChar[20];
+        choreDoerLine.toCharArray(choreDoerLineChar, 20);
+
         u8g2.clearBuffer();
         u8g2.setFont(u8g2_font_6x13_tr);
         u8g2.drawStr(0, 15, timeChar);
-        u8g2.drawStr(0, 35, "Nothing to see here");
+        u8g2.drawStr(0, 35, "Luc  Mih  Vig  Nat ");
+        u8g2.drawStr(0, 55, choreDoerLineChar);
         u8g2.sendBuffer();
     }
     else
@@ -594,7 +626,7 @@ void setup()
     //enter infinite while loop that contains the central functionality.
     while(1)
     {   
-        /*TODO: order of operations:
+        /*Erder of operations:
             Within 60 seconds of set daily log time, start a countdown with
             a message on OLED and serial print saying COUNTDOWN TO LOG with 
             numbers counting down, then a message if log is successful. 
