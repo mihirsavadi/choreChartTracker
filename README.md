@@ -52,6 +52,10 @@ Old Notes:
 
 ### Hardware Notes  
 
+TODOS:
+- Integrate entire board into whiteboard setup.
+- Add more pics to this read me with board integrated, and usb-C charging breakout added.
+
 Old Notes:
 
 - 5th July:
