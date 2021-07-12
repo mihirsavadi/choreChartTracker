@@ -407,11 +407,111 @@ bool printErrorMessage()
     return false;
 }
 
+/* Update google sheets with contents of SD card if have wifi connection.
+    Return true if success */
+bool updateGoogleSheets()
+{
+    //TODO
+}
+
+/* Detects when it is time to log. It returns a value in seconds to the next
+    log time. Returns this value as an unsigned int. When done */
+uint32_t timeToLog()
+{
+    //log time is 5am everyday
+    uint8_t log_hour = 14;
+    uint8_t log_min  = 5;
+    uint8_t log_sec  = 0;
+    uint32_t log_daySec = log_sec + log_min*60 + log_hour*60*60;
+
+    //get current time
+    DateTime now = rtc.now();
+    uint32_t now_daySec = now.second() + now.minute()*60 + now.hour()*60*60;
+
+    //get difference between current time and next log time in seconds
+    uint32_t timeDiff;
+    if (now_daySec > log_daySec)
+    {
+        timeDiff = (86400-now_daySec)+log_daySec;
+    }
+    else
+    {
+        timeDiff = log_daySec - now_daySec;
+    }
+
+    return timeDiff;
+}
+
+/* log data in sd card. returns true if success, false if not. If log.txt
+    doesnt exist, create it. If it does exist, append to it.
+    <year>, <month>, <day>, <hour>, <min>, <sec>, <choredoer1>, <chore>,
+        <choredoer2>, <chore>, <choredoer3>, <chore>, <choredoer4>, <chore>,
+        <errors> */
+void loggywoggy()
+{
+    if (timeToLog() == 0)
+    {
+        File file = SD.open("/log.txt", FILE_APPEND);
+        if (!file)
+        {
+            errorMessage.concat("Failed to open log.txt for appending.");
+            file.close();
+        }
+
+        chartStat choreStat = whoIsChoreDoer();
+
+        DateTime now = rtc.now();
+        String log = String(now.year()) + "," +
+                    String(now.month()) + "," +
+                    String(now.day()) + "," +
+                    String(now.hour()) + "," +
+                    String(now.minute()) + "," +
+                    String(now.second()) + "," +
+                    String(choreStat.chore0_name) + "," + 
+                    String(choreStat.chore0_doer == LUCAS ? "Lucas" :
+                            choreStat.chore0_doer == MIHIR ? "Mihir" :
+                            choreStat.chore0_doer == NATHAN ? "Nathan" :
+                            choreStat.chore0_doer == VIGNESH ? "Vignesh" : "Invalid"
+                            ) + "," +
+                    String(choreStat.chore1_name) + "," + 
+                    String(choreStat.chore1_doer == LUCAS ? "Lucas" :
+                            choreStat.chore1_doer == MIHIR ? "Mihir" :
+                            choreStat.chore1_doer == NATHAN ? "Nathan" :
+                            choreStat.chore1_doer == VIGNESH ? "Vignesh" : "Invalid"
+                            ) + "," +
+                    String(choreStat.chore2_name) + "," + 
+                    String(choreStat.chore2_doer == LUCAS ? "Lucas" :
+                            choreStat.chore2_doer == MIHIR ? "Mihir" :
+                            choreStat.chore2_doer == NATHAN ? "Nathan" :
+                            choreStat.chore2_doer == VIGNESH ? "Vignesh" : "Invalid"
+                            ) + "," +
+                    String(choreStat.chore3_name) + "," + 
+                    String(choreStat.chore3_doer == LUCAS ? "Lucas" :
+                            choreStat.chore3_doer == MIHIR ? "Mihir" :
+                            choreStat.chore3_doer == NATHAN ? "Nathan" :
+                            choreStat.chore3_doer == VIGNESH ? "Vignesh" : "Invalid"
+                            ) + ",";
+                    
+
+        if (errorMessage.length() == 0)
+            log.concat("NO ERRORS");
+        else
+            log.concat(errorMessage);
+
+
+        Serial.println(log);
+        file.println(log);
+
+        file.close();
+    }
+}
+
 /* function to display stuff on screen when not logging.
     Show time at the top, wifi connection, if have internet, and a meme or a 
     message that may or may not cycle. */
 void displayNormal()
 {
+    // prepare time information
     DateTime now = rtc.now();
 
     String month;
@@ -429,83 +529,35 @@ void displayNormal()
     else if (month_num == 11) month = "Nov";
     else if (month_num == 12) month = "Dec";
 
-    String time = "[" + String(now.day()) + "/" + month + "/" + 
-        String(now.year()) + "] " + String(now.hour()) + ":" + 
-        String(now.minute()) + ":" + String(now.second());
+    String time = String(now.hour()) + ":" + String(now.minute()) + ":" + 
+        String(now.second()) + " " + month + "/" + String(now.day()) + "/" + 
+        String(now.year());
     char timeChar[40];
     time.toCharArray(timeChar, 40);
 
-    u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_6x13_tr);
-    u8g2.drawStr(0, 15, timeChar);
-    u8g2.sendBuffer();
-}
-
-/* log data in sd card. returns true if success, false if not. If log.txt
-    doesnt exist, create it. If it does exist, append to it.
-    <year>, <month>, <day>, <hour>, <min>, <sec>, <choredoer1>, <chore>,
-        <choredoer2>, <chore>, <choredoer3>, <chore>, <choredoer4>, <chore>,
-        <errors> */
-void loggywoggy()
-{
-    File file = SD.open("/log.txt", FILE_APPEND);
-    if (!file)
+    //If 30 seconds to logging display countdown then flash screen
+    // otherwise just display normal shit
+    if (timeToLog() > 30)
     {
-        errorMessage.concat("Failed to open log.txt for appending.");
-        file.close();
+        u8g2.clearBuffer();
+        u8g2.setFont(u8g2_font_6x13_tr);
+        u8g2.drawStr(0, 15, timeChar);
+        u8g2.drawStr(0, 35, "Nothing to see here");
+        u8g2.sendBuffer();
     }
-
-    chartStat choreStat = whoIsChoreDoer();
-
-    DateTime now = rtc.now();
-    String log = String(now.year()) + "," +
-                 String(now.month()) + "," +
-                 String(now.day()) + "," +
-                 String(now.hour()) + "," +
-                 String(now.minute()) + "," +
-                 String(now.second()) + "," +
-                 String(choreStat.chore0_name) + "," + 
-                 String(choreStat.chore0_doer == LUCAS ? "Lucas" :
-                        choreStat.chore0_doer == MIHIR ? "Mihir" :
-                        choreStat.chore0_doer == NATHAN ? "Nathan" :
-                        choreStat.chore0_doer == VIGNESH ? "Vignesh" : "Invalid"
-                        ) + "," +
-                 String(choreStat.chore1_name) + "," + 
-                 String(choreStat.chore1_doer == LUCAS ? "Lucas" :
-                        choreStat.chore1_doer == MIHIR ? "Mihir" :
-                        choreStat.chore1_doer == NATHAN ? "Nathan" :
-                        choreStat.chore1_doer == VIGNESH ? "Vignesh" : "Invalid"
-                        ) + "," +
-                 String(choreStat.chore2_name) + "," + 
-                 String(choreStat.chore2_doer == LUCAS ? "Lucas" :
-                        choreStat.chore2_doer == MIHIR ? "Mihir" :
-                        choreStat.chore2_doer == NATHAN ? "Nathan" :
-                        choreStat.chore2_doer == VIGNESH ? "Vignesh" : "Invalid"
-                        ) + "," +
-                 String(choreStat.chore3_name) + "," + 
-                 String(choreStat.chore3_doer == LUCAS ? "Lucas" :
-                        choreStat.chore3_doer == MIHIR ? "Mihir" :
-                        choreStat.chore3_doer == NATHAN ? "Nathan" :
-                        choreStat.chore3_doer == VIGNESH ? "Vignesh" : "Invalid"
-                        ) + ",";
-                
-
-    if (errorMessage.length() == 0)
-        log.concat("NO ERRORS");
     else
-        log.concat(errorMessage);
+    {
+        char timeToLogChar[20];
+        sprintf(timeToLogChar, "%u seconds", timeToLog());
 
-    Serial.println(log);
-    file.println(log);
-
-    file.close();
-}
-
-/* Update google sheets with contents of SD card if have wifi connection.
-    Return true if success */
-bool updateGoogleSheets()
-{
-    //TODO
+        u8g2.clearBuffer();
+        u8g2.setFont(u8g2_font_6x13_tr);
+        u8g2.drawStr(0, 15, timeChar);
+        u8g2.drawStr(0, 35, "CAPTURING DATA IN:");
+        u8g2.setFont(u8g2_font_6x13_tr);
+        u8g2.drawStr(0, 55, timeToLogChar);
+        u8g2.sendBuffer();
+    }
 }
 
 void setup()
