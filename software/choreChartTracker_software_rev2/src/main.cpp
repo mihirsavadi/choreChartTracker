@@ -121,49 +121,150 @@ void setup_VL53L0Xarray()
 }
 
 /* read VL53l0X sensor data */
-uint16_t const get_mm_VL53l0X(uint8_t sensorIndex)
+struct vl53l0xArray {
+    uint16_t vl53l0x_0;
+    uint16_t vl53l0x_1;
+    uint16_t vl53l0x_2;
+    uint16_t vl53l0x_3;
+};
+vl53l0xArray get_mm_VL53l0X()
 {
-    uint16_t range;
-    if (sensorIndex == 0) 
+    vl53l0xArray outputArray;
+
+    uint16_t range = VL53l0X_0.readRange();
+    if (range > 8000)
     {
-        range = VL53l0X_0.readRange();
-        if (range > 8000)
-        {
-            return VL53l0X_0.readRangeStatus();
-        }
-        return range;
+        range = VL53l0X_0.readRangeStatus();
     }
-    if (sensorIndex == 1) 
+    outputArray.vl53l0x_0 = range;
+
+    range = VL53l0X_1.readRange();
+    if (range > 8000)
     {
-        range = VL53l0X_1.readRange();
-        if (range > 8000)
-        {
-            return VL53l0X_1.readRangeStatus();
-        }
-        return range;
+        range = VL53l0X_1.readRangeStatus();
     }
-    if (sensorIndex == 2) 
+    outputArray.vl53l0x_1 = range;
+
+    range = VL53l0X_2.readRange();
+    if (range > 8000)
     {
-        range = VL53l0X_2.readRange();
-        if (range > 8000)
-        {
-            return VL53l0X_2.readRangeStatus();
-        }
-        return range;
+        range = VL53l0X_2.readRangeStatus();
     }
-    if (sensorIndex == 3) 
+    outputArray.vl53l0x_2 = range;
+
+    range = VL53l0X_3.readRange();
+    if (range > 8000)
     {
-        range = VL53l0X_3.readRange();
-        if (range > 8000)
-        {
-            return VL53l0X_3.readRangeStatus();
-        }
-        return range;
+        range = VL53l0X_3.readRangeStatus();
+    }
+    outputArray.vl53l0x_3 = range;
+
+    return outputArray;
+}
+
+/* distance to choreDoer */
+enum choreDoerEnum{LUCAS, MIHIR, NATHAN, VIGNESH, INVALID};
+struct chartStat {
+    const String chore0_name = "Dishes";
+    choreDoerEnum chore0_doer;
+    const String chore1_name = "EmptyDishwasher";
+    choreDoerEnum chore1_doer;
+    const String chore2_name = "Trash";
+    choreDoerEnum chore2_doer;
+    const String chore3_name = "Recycle";
+    choreDoerEnum chore3_doer;
+};
+chartStat whoIsChoreDoer()
+{
+    vl53l0xArray sensorReadings = get_mm_VL53l0X();
+
+    chartStat outputStat;
+
+    if (sensorReadings.vl53l0x_0 > 10 && sensorReadings.vl53l0x_0 < 20)
+    {
+        outputStat.chore0_doer = LUCAS;
+    }
+    else if (sensorReadings.vl53l0x_0 > 30 && sensorReadings.vl53l0x_0 < 40)
+    {
+        outputStat.chore0_doer = MIHIR;
+    }
+    else if (sensorReadings.vl53l0x_0 > 50 && sensorReadings.vl53l0x_0 < 60)
+    {
+        outputStat.chore0_doer = NATHAN;
+    }
+    else if (sensorReadings.vl53l0x_0 > 70 && sensorReadings.vl53l0x_0 < 80)
+    {
+        outputStat.chore0_doer = VIGNESH;
+    }
+    else
+    {
+        outputStat.chore0_doer = INVALID;
     }
 
-    //return value is sensor index is invalid/not accounted for
-    errorMessage.concat("sensor index greater than 3 requested, bad!" + ERDELIM);
-    return 6;
+    if (sensorReadings.vl53l0x_1 > 10 && sensorReadings.vl53l0x_1 < 20)
+    {
+        outputStat.chore1_doer = LUCAS;
+    }
+    else if (sensorReadings.vl53l0x_1 > 30 && sensorReadings.vl53l0x_1 < 40)
+    {
+        outputStat.chore1_doer = MIHIR;
+    }
+    else if (sensorReadings.vl53l0x_1 > 50 && sensorReadings.vl53l0x_1 < 60)
+    {
+        outputStat.chore1_doer = NATHAN;
+    }
+    else if (sensorReadings.vl53l0x_1 > 70 && sensorReadings.vl53l0x_1 < 80)
+    {
+        outputStat.chore1_doer = VIGNESH;
+    }
+    else
+    {
+        outputStat.chore1_doer = INVALID;
+    }
+
+    if (sensorReadings.vl53l0x_2 > 10 && sensorReadings.vl53l0x_2 < 20)
+    {
+        outputStat.chore2_doer = LUCAS;
+    }
+    else if (sensorReadings.vl53l0x_2 > 30 && sensorReadings.vl53l0x_2 < 40)
+    {
+        outputStat.chore2_doer = MIHIR;
+    }
+    else if (sensorReadings.vl53l0x_2 > 50 && sensorReadings.vl53l0x_2 < 60)
+    {
+        outputStat.chore2_doer = NATHAN;
+    }
+    else if (sensorReadings.vl53l0x_2> 70 && sensorReadings.vl53l0x_2 < 80)
+    {
+        outputStat.chore2_doer = VIGNESH;
+    }
+    else
+    {
+        outputStat.chore2_doer = INVALID;
+    }
+
+    if (sensorReadings.vl53l0x_3 > 10 && sensorReadings.vl53l0x_3 < 20)
+    {
+        outputStat.chore3_doer = LUCAS;
+    }
+    else if (sensorReadings.vl53l0x_3 > 30 && sensorReadings.vl53l0x_3 < 40)
+    {
+        outputStat.chore3_doer = MIHIR;
+    }
+    else if (sensorReadings.vl53l0x_3 > 50 && sensorReadings.vl53l0x_3 < 60)
+    {
+        outputStat.chore3_doer = NATHAN;
+    }
+    else if (sensorReadings.vl53l0x_3> 70 && sensorReadings.vl53l0x_3 < 80)
+    {
+        outputStat.chore3_doer = VIGNESH;
+    }
+    else
+    {
+        outputStat.chore3_doer = INVALID;
+    }
+
+    return outputStat;
 }
 
 /* Setup RTC */
@@ -357,7 +458,48 @@ void loggywoggy()
         file.close();
     }
 
-    file.println("butt");
+    chartStat choreStat = whoIsChoreDoer();
+
+    DateTime now = rtc.now();
+    String log = String(now.year()) + "," +
+                 String(now.month()) + "," +
+                 String(now.day()) + "," +
+                 String(now.hour()) + "," +
+                 String(now.minute()) + "," +
+                 String(now.second()) + "," +
+                 String(choreStat.chore0_name) + "," + 
+                 String(choreStat.chore0_doer == LUCAS ? "Lucas" :
+                        choreStat.chore0_doer == MIHIR ? "Mihir" :
+                        choreStat.chore0_doer == NATHAN ? "Nathan" :
+                        choreStat.chore0_doer == VIGNESH ? "Vignesh" : "Invalid"
+                        ) + "," +
+                 String(choreStat.chore1_name) + "," + 
+                 String(choreStat.chore1_doer == LUCAS ? "Lucas" :
+                        choreStat.chore1_doer == MIHIR ? "Mihir" :
+                        choreStat.chore1_doer == NATHAN ? "Nathan" :
+                        choreStat.chore1_doer == VIGNESH ? "Vignesh" : "Invalid"
+                        ) + "," +
+                 String(choreStat.chore2_name) + "," + 
+                 String(choreStat.chore2_doer == LUCAS ? "Lucas" :
+                        choreStat.chore2_doer == MIHIR ? "Mihir" :
+                        choreStat.chore2_doer == NATHAN ? "Nathan" :
+                        choreStat.chore2_doer == VIGNESH ? "Vignesh" : "Invalid"
+                        ) + "," +
+                 String(choreStat.chore3_name) + "," + 
+                 String(choreStat.chore3_doer == LUCAS ? "Lucas" :
+                        choreStat.chore3_doer == MIHIR ? "Mihir" :
+                        choreStat.chore3_doer == NATHAN ? "Nathan" :
+                        choreStat.chore3_doer == VIGNESH ? "Vignesh" : "Invalid"
+                        ) + ",";
+                
+
+    if (errorMessage.length() == 0)
+        log.concat("NO ERRORS");
+    else
+        log.concat(errorMessage);
+
+    Serial.println(log);
+    file.println(log);
 
     file.close();
 }
