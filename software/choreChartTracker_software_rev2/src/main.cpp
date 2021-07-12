@@ -177,19 +177,29 @@ chartStat whoIsChoreDoer()
 
     chartStat outputStat;
 
-    if (sensorReadings.vl53l0x_0 > 10 && sensorReadings.vl53l0x_0 < 20)
+    uint16_t doer0_lower = 30;
+    uint16_t doer0_upper = 100;
+    uint16_t doer1_lower = 100;
+    uint16_t doer1_upper = 200;
+    uint16_t doer2_lower = 200;
+    uint16_t doer2_upper = 300;
+    uint16_t doer3_lower = 300;
+    uint16_t doer3_upper = 400;
+
+
+    if (sensorReadings.vl53l0x_0 > doer0_lower && sensorReadings.vl53l0x_0 <= doer0_upper)
     {
         outputStat.chore0_doer = LUCAS;
     }
-    else if (sensorReadings.vl53l0x_0 > 30 && sensorReadings.vl53l0x_0 < 40)
+    else if (sensorReadings.vl53l0x_0 > doer1_lower && sensorReadings.vl53l0x_0 <= doer1_upper)
     {
         outputStat.chore0_doer = MIHIR;
     }
-    else if (sensorReadings.vl53l0x_0 > 50 && sensorReadings.vl53l0x_0 < 60)
+    else if (sensorReadings.vl53l0x_0 > doer2_lower && sensorReadings.vl53l0x_0 <= doer2_upper)
     {
         outputStat.chore0_doer = NATHAN;
     }
-    else if (sensorReadings.vl53l0x_0 > 70 && sensorReadings.vl53l0x_0 < 80)
+    else if (sensorReadings.vl53l0x_0 > doer3_lower && sensorReadings.vl53l0x_0 <= doer3_upper)
     {
         outputStat.chore0_doer = VIGNESH;
     }
@@ -198,19 +208,19 @@ chartStat whoIsChoreDoer()
         outputStat.chore0_doer = INVALID;
     }
 
-    if (sensorReadings.vl53l0x_1 > 10 && sensorReadings.vl53l0x_1 < 20)
+    if (sensorReadings.vl53l0x_1 > doer0_lower && sensorReadings.vl53l0x_1 <= doer0_upper)
     {
         outputStat.chore1_doer = LUCAS;
     }
-    else if (sensorReadings.vl53l0x_1 > 30 && sensorReadings.vl53l0x_1 < 40)
+    else if (sensorReadings.vl53l0x_1 > doer1_lower && sensorReadings.vl53l0x_1 <= doer1_upper)
     {
         outputStat.chore1_doer = MIHIR;
     }
-    else if (sensorReadings.vl53l0x_1 > 50 && sensorReadings.vl53l0x_1 < 60)
+    else if (sensorReadings.vl53l0x_1 > doer2_lower && sensorReadings.vl53l0x_1 <= doer2_upper)
     {
         outputStat.chore1_doer = NATHAN;
     }
-    else if (sensorReadings.vl53l0x_1 > 70 && sensorReadings.vl53l0x_1 < 80)
+    else if (sensorReadings.vl53l0x_1 > doer3_lower && sensorReadings.vl53l0x_1 <= doer3_upper)
     {
         outputStat.chore1_doer = VIGNESH;
     }
@@ -219,19 +229,19 @@ chartStat whoIsChoreDoer()
         outputStat.chore1_doer = INVALID;
     }
 
-    if (sensorReadings.vl53l0x_2 > 10 && sensorReadings.vl53l0x_2 < 20)
+    if (sensorReadings.vl53l0x_2 > doer0_lower && sensorReadings.vl53l0x_2 <= doer0_upper)
     {
         outputStat.chore2_doer = LUCAS;
     }
-    else if (sensorReadings.vl53l0x_2 > 30 && sensorReadings.vl53l0x_2 < 40)
+    else if (sensorReadings.vl53l0x_2 > doer1_lower && sensorReadings.vl53l0x_2 <= doer1_upper)
     {
         outputStat.chore2_doer = MIHIR;
     }
-    else if (sensorReadings.vl53l0x_2 > 50 && sensorReadings.vl53l0x_2 < 60)
+    else if (sensorReadings.vl53l0x_2 > doer2_lower && sensorReadings.vl53l0x_2 <= doer2_upper)
     {
         outputStat.chore2_doer = NATHAN;
     }
-    else if (sensorReadings.vl53l0x_2> 70 && sensorReadings.vl53l0x_2 < 80)
+    else if (sensorReadings.vl53l0x_2> doer3_lower && sensorReadings.vl53l0x_2 <= doer3_upper)
     {
         outputStat.chore2_doer = VIGNESH;
     }
@@ -240,19 +250,19 @@ chartStat whoIsChoreDoer()
         outputStat.chore2_doer = INVALID;
     }
 
-    if (sensorReadings.vl53l0x_3 > 10 && sensorReadings.vl53l0x_3 < 20)
+    if (sensorReadings.vl53l0x_3 > doer0_lower && sensorReadings.vl53l0x_3 <= doer0_upper)
     {
         outputStat.chore3_doer = LUCAS;
     }
-    else if (sensorReadings.vl53l0x_3 > 30 && sensorReadings.vl53l0x_3 < 40)
+    else if (sensorReadings.vl53l0x_3 > doer1_lower && sensorReadings.vl53l0x_3 <= doer1_upper)
     {
         outputStat.chore3_doer = MIHIR;
     }
-    else if (sensorReadings.vl53l0x_3 > 50 && sensorReadings.vl53l0x_3 < 60)
+    else if (sensorReadings.vl53l0x_3 > doer2_lower && sensorReadings.vl53l0x_3 <= doer2_upper)
     {
         outputStat.chore3_doer = NATHAN;
     }
-    else if (sensorReadings.vl53l0x_3> 70 && sensorReadings.vl53l0x_3 < 80)
+    else if (sensorReadings.vl53l0x_3> doer3_lower && sensorReadings.vl53l0x_3 <= doer3_upper)
     {
         outputStat.chore3_doer = VIGNESH;
     }
@@ -538,42 +548,19 @@ void displayNormal()
     if (timeToLog() > 30)
     {
         chartStat curStat = whoIsChoreDoer();
-        String LucasChore = "????";
-        String MihirChore = "????";
-        String VigChore   = "????";
-        String NatChore   = "????";
+        String pepol[5] = {"LUC", "MIH", "NAT", "VIG", "???"};
 
-        String Dishes     = "DISH";
-        String DishWasher = "DWAS";
-        String Trash      = "TRAS";
-        String Recycling  = "RECY";
-        
-        if      (curStat.chore0_doer == LUCAS)   LucasChore = Dishes;
-        else if (curStat.chore0_doer == MIHIR)   MihirChore = Dishes;
-        else if (curStat.chore0_doer == VIGNESH) VigChore   = Dishes;
-        else if (curStat.chore0_doer == NATHAN)  NatChore   = Dishes;
-        if      (curStat.chore1_doer == LUCAS)   LucasChore = DishWasher;
-        else if (curStat.chore1_doer == MIHIR)   MihirChore = DishWasher;
-        else if (curStat.chore1_doer == VIGNESH) VigChore   = DishWasher;
-        else if (curStat.chore1_doer == NATHAN)  NatChore   = DishWasher;
-        if      (curStat.chore2_doer == LUCAS)   LucasChore = Trash;
-        else if (curStat.chore2_doer == MIHIR)   MihirChore = Trash;
-        else if (curStat.chore2_doer == VIGNESH) VigChore   = Trash;
-        else if (curStat.chore2_doer == NATHAN)  NatChore   = Trash;
-        if      (curStat.chore3_doer == LUCAS)   LucasChore = Recycling;
-        else if (curStat.chore3_doer == MIHIR)   MihirChore = Recycling;
-        else if (curStat.chore3_doer == VIGNESH) VigChore   = Recycling;
-        else if (curStat.chore3_doer == NATHAN)  NatChore   = Recycling;
-
-        String choreDoerLine = LucasChore + " " + MihirChore + " " + 
-            VigChore + " " + NatChore;
+        String choreDoerLine = pepol[curStat.chore0_doer] + "  " + 
+                               pepol[curStat.chore1_doer] + "  " +
+                               pepol[curStat.chore2_doer] + "  " + 
+                               pepol[curStat.chore3_doer];
         char choreDoerLineChar[20];
         choreDoerLine.toCharArray(choreDoerLineChar, 20);
 
         u8g2.clearBuffer();
         u8g2.setFont(u8g2_font_6x13_tr);
         u8g2.drawStr(0, 15, timeChar);
-        u8g2.drawStr(0, 35, "Luc  Mih  Vig  Nat ");
+        u8g2.drawStr(0, 35, "Dish DWas Tras Recy");
         u8g2.drawStr(0, 55, choreDoerLineChar);
         u8g2.sendBuffer();
     }
