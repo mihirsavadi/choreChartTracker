@@ -429,18 +429,15 @@ void displayNormal()
     else if (month_num == 11) month = "Nov";
     else if (month_num == 12) month = "Dec";
 
-    String date = String(now.day()) + "/" + month + "/" + String(now.year());
-    char dateChar[15];
-    date.toCharArray(dateChar, 15);
-
-    String time = String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
-    char timeChar[21];
-    time.toCharArray(timeChar, 20);
+    String time = "[" + String(now.day()) + "/" + month + "/" + 
+        String(now.year()) + "] " + String(now.hour()) + ":" + 
+        String(now.minute()) + ":" + String(now.second());
+    char timeChar[40];
+    time.toCharArray(timeChar, 40);
 
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_9x18_tr);
+    u8g2.setFont(u8g2_font_6x13_tr);
     u8g2.drawStr(0, 15, timeChar);
-    u8g2.drawStr(0, 35, dateChar);
     u8g2.sendBuffer();
 }
 
