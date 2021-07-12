@@ -428,7 +428,7 @@ uint32_t timeToLog()
 {
     //log time is 5am everyday
     uint8_t log_hour = 14;
-    uint8_t log_min  = 5;
+    uint8_t log_min  = 58;
     uint8_t log_sec  = 0;
     uint32_t log_daySec = log_sec + log_min*60 + log_hour*60*60;
 
