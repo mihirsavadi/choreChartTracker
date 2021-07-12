@@ -58,7 +58,6 @@ Hardware rev2 moved to using a ESP32 Pico Kit development board. Organizing depe
 
 TODOS:  
 
-- The ESP32 Pico Kit footprint in Diptrace is completely wrong, which means the rev2 PCB is completely screwed. Refer to [this link](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/hw-reference/esp32/get-started-pico-kit-1.html) and fix the footprint and symbol fixed: label everything.   
 - Rewrite all code from scratch for hardware rev2. ESP32 Pico Kit keeps throwing "Guru Meditation Error: Core 1 panic'ed (LoadProhibited). Exception was unhandled." errors, implying memory usage and access errors. I have no clue where this is coming from, but its also happening with basic adafruit library examples for the VL53L0X senors. Might have to ditch this board and stick with a teensy. So much trouble just to end back at a teensy.
 - Integrate SD Card reader and logging functionality, which will wrap-up main software functionality.
 - Hardware Rev2: Make a simple wifi broadcasted server using the ESP32's wifi libraries.
@@ -69,11 +68,12 @@ Old Notes:
 
 ### Hardware Notes  
 
-- [Hardware rev2] The usb-c port placed so far back is too low for connector clearance. Connecting a usb cable causes the connecter to have to lift up at an angle because of the vertical thickness of the connector, tearing the pins. It has to be placed closer to the edge for clearance.
-
 Old Notes:
 
 - 19th April:  
   Currently using the Seeeduino XIAO as the microcontroller on the solderable breadboard. Its running into lots of issues with the bootloader and dissapearing from the COM ports. Just around the time of integrating RTC code and testing on the OLED (18Apr'21) the XIAO decided to brick its bootloader again. After miraculously fixing it with several trial and error resets into DFU mode previously, repair doesnt seem like a completely deterministic process. Apparently this is a [known issue](https://forum.seeedstudio.com/t/odyssey-x86j4105-ubuntu-20-4-no-dev-ttyacm0-and-no-seeeduino-listed-under-lsusb/254322/19) which can be fixed, but it is a greater pain than it is worth. At this point most features have been integrated fairly smoothly, with this pain-of-a-uC being the bottle neck.
 
   Also with the solderable breadboard one of the power rails on the edges was decoupled from the power rails on the upper side and used as the I2C bus, which means the entire signal line was exposed and uninsulated. This is not a big deal because of the systems indoor nature, but when handling it with my hands and accidentally touching the I2C bus lines it was cool to see the OLED glitch out yet still maintain functionality somewhat. Should probably make a PCB.  
+  
+- 29th July:
+  [Hardware rev2] The usb-c port placed so far back is too low for connector clearance. Connecting a usb cable causes the connecter to have   to lift up at an angle because of the vertical thickness of the connector, tearing the pins. It has to be placed closer to the edge for clearance.  

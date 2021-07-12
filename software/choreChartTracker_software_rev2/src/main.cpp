@@ -12,7 +12,7 @@
   file, with a clear flow of commands.
 
   TODO: test and store max and min vl53l0x distances.
-  TODO: test SD card with one plugged in.
+  TODO: test SD card with one plugged in. use sd card in car rn.
 */
 
 /* include dependencies here */
@@ -50,8 +50,6 @@ Adafruit_VL53L0X VL53l0X_2 = Adafruit_VL53L0X();
 Adafruit_VL53L0X VL53l0X_3 = Adafruit_VL53L0X(); 
 
 RTC_DS3231 rtc;
-
-File dataFile;
 
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2 = 
             U8G2_SSD1306_128X64_NONAME_F_HW_I2C(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
@@ -191,8 +189,6 @@ void setup_RTC()
 }
 
 /* setup SD card */
-//TODO: implement creating log file if doesnt exist, and append if it does.
-// include examples from 
 void setup_SD()
 {
     //make CS pin output, and cardDetect pin input
@@ -204,10 +200,32 @@ void setup_SD()
     {
         errorMessage.concat("Card is not inserted." + ERDELIM);
     }
-    else if (!SD.begin(SPI_CS))
+    
+    if (!SD.begin(SPI_CS))
     {
+        if(SD.cardType() == CARD_NONE)
+            errorMessage.concat("Card type detected as NONE." + ERDELIM);
+        else if (SD.cardType() == CARD_MMC)
+            errorMessage.concat("Card type detected as MMC." + ERDELIM);
+        else if (SD.cardType() == CARD_SD)
+            errorMessage.concat("Card type detected as SD." + ERDELIM);
+        else if (SD.cardType() == CARD_SDHC)
+            errorMessage.concat("Card type detected as SDHC." + ERDELIM);
+        else if (SD.cardType() == CARD_UNKNOWN)
+            errorMessage.concat("Card type detected as UNKOWN." + ERDELIM);
+
         errorMessage.concat("Card failed init." + ERDELIM);
     }
+
+    //check if log.txt exists, if doesnt exist, create it. Then keep it open
+    // for appending.
+    File file = SD.open("/log.txt", FILE_APPEND);
+    if (!file)
+    {
+        errorMessage.concat("Failed to open log.txt.");
+        file.close();
+    }
+    file.close();
 }
 
 /* setup 0.96" OLED screen */
@@ -219,6 +237,137 @@ void setup_OLED()
     }
 }
 
+/* Checks to do while running, and throw errors otherwise */
+void runtimechecks()
+{
+    //check SD card status
+    if (digitalRead(CARD_DETECT) == LOW)
+    {
+        errorMessage.concat("Card is not inserted." + ERDELIM);
+    }
+    
+    if (!SD.begin(SPI_CS))
+    {
+        if(SD.cardType() == CARD_NONE)
+            errorMessage.concat("Card type detected as NONE." + ERDELIM);
+        else if (SD.cardType() == CARD_MMC)
+            errorMessage.concat("Card type detected as MMC." + ERDELIM);
+        else if (SD.cardType() == CARD_SD)
+            errorMessage.concat("Card type detected as SD." + ERDELIM);
+        else if (SD.cardType() == CARD_SDHC)
+            errorMessage.concat("Card type detected as SDHC." + ERDELIM);
+        else if (SD.cardType() == CARD_UNKNOWN)
+            errorMessage.concat("Card type detected as UNKOWN." + ERDELIM);
+
+        errorMessage.concat("Card failed init." + ERDELIM);
+    }
+
+    //check RTC status
+    if (!rtc.begin())
+    {
+        errorMessage.concat("Could not find RTC." + ERDELIM);
+    }
+
+    //TODO
+    //check sensors status
+}
+
+/* shortcut to print error screen to OLED and serial monitor 
+    returns true if error present, false if not.*/
+bool printErrorMessage()
+{
+    if (errorMessage.length() != 0)
+    {
+        Serial.println("ERRORS PRESENT --> " + errorMessage);
+        
+        int sdCardErrorPos = errorMessage.indexOf("Card");
+        if (sdCardErrorPos != -1)
+        {
+            u8g2.clearBuffer();
+            u8g2.setFont(u8g2_font_9x18_tr);
+            u8g2.drawStr(0, 15, "ERROR PRESENT!");
+            u8g2.drawStr(0, 35, "SD card not in!");
+            u8g2.drawStr(0, 55, "System Halted!");
+            u8g2.sendBuffer();
+        }
+        else
+        {
+            u8g2.clearBuffer();
+            u8g2.setFont(u8g2_font_9x18_tr);
+            u8g2.drawStr(0, 15, "ERROR PRESENT!");
+            u8g2.drawStr(0, 35, "CHECK SD CARD!");
+            u8g2.drawStr(0, 55, "System Halted!");
+            u8g2.sendBuffer();
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+/* function to display stuff on screen when not logging.
+    Show time at the top, wifi connection, if have internet, and a meme or a 
+    message that may or may not cycle. */
+void displayNormal()
+{
+    DateTime now = rtc.now();
+
+    String month;
+    uint8_t month_num = now.month();
+    if (month_num == 1)       month = "Jan";
+    else if (month_num == 2)  month = "Feb";
+    else if (month_num == 3)  month = "Mar";
+    else if (month_num == 4)  month = "Apr";
+    else if (month_num == 5)  month = "May";
+    else if (month_num == 6)  month = "Jun";
+    else if (month_num == 7)  month = "Jul";
+    else if (month_num == 8)  month = "Aug";
+    else if (month_num == 9)  month = "Sep";
+    else if (month_num == 10) month = "Oct";
+    else if (month_num == 11) month = "Nov";
+    else if (month_num == 12) month = "Dec";
+
+    String date = String(now.day()) + "/" + month + "/" + String(now.year());
+    char dateChar[15];
+    date.toCharArray(dateChar, 15);
+
+    String time = String(now.hour()) + ":" + String(now.minute()) + ":" + String(now.second());
+    char timeChar[21];
+    time.toCharArray(timeChar, 20);
+
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_9x18_tr);
+    u8g2.drawStr(0, 15, timeChar);
+    u8g2.drawStr(0, 35, dateChar);
+    u8g2.sendBuffer();
+}
+
+/* log data in sd card. returns true if success, false if not. If log.txt
+    doesnt exist, create it. If it does exist, append to it.
+    <year>, <month>, <day>, <hour>, <min>, <sec>, <choredoer1>, <chore>,
+        <choredoer2>, <chore>, <choredoer3>, <chore>, <choredoer4>, <chore>,
+        <errors> */
+void loggywoggy()
+{
+    File file = SD.open("/log.txt", FILE_APPEND);
+    if (!file)
+    {
+        errorMessage.concat("Failed to open log.txt for appending.");
+        file.close();
+    }
+
+    file.println("butt");
+
+    file.close();
+}
+
+/* Update google sheets with contents of SD card if have wifi connection.
+    Return true if success */
+bool updateGoogleSheets()
+{
+    //TODO
+}
 
 void setup()
 {
@@ -232,37 +381,49 @@ void setup()
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_9x18B_tf );
     u8g2.drawStr(0, 30, "Initializing");
-    u8g2.drawStr(0, 45, "   Baby!");
+    u8g2.drawStr(0, 45, "    Baby!");
     u8g2.sendBuffer();
 
     setup_VL53L0Xarray();
     setup_RTC();
     setup_SD();
 
-    Serial.println("Initialization Done!");
-    u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_9x18B_tf );
-    u8g2.drawStr(0, 30, "Initialization");
-    u8g2.drawStr(0, 45, "    done!");
-    u8g2.sendBuffer();
+    if (!printErrorMessage())
+    {
+        Serial.println("Initialization Done! No Errors!");
+        u8g2.clearBuffer();
+        u8g2.setFont(u8g2_font_9x18B_tf );
+        u8g2.drawStr(0, 30, "Initialization");
+        u8g2.drawStr(0, 45, "    done!");
+        u8g2.drawStr(0, 60, " No Errors :)");
+        u8g2.sendBuffer();
+        delay(500);
+    }
 
     //enter infinite while loop that contains the central functionality.
     while(1)
-    {
-        //if errors present, halt loop and and display on OLED.
-        //Note that OLED should ALWAYS be displaying something. So if OLED is off then
-        // there is an error with OLED.
-        if (errorMessage.length() != 0)
-        {
-            Serial.println("ERRORS PRESENT --> " + errorMessage);
-            u8g2.clearBuffer();
-            u8g2.setFont(u8g2_font_9x18_tr);
-            u8g2.drawStr(0, 25, "ERROR PRESENT!");
-            u8g2.drawStr(0, 45, "CHECK SD log.txt!");
+    {   
+        /*TODO: order of operations:
+            Within 60 seconds of set daily log time, start a countdown with
+            a message on OLED and serial print saying COUNTDOWN TO LOG with 
+            numbers counting down, then a message if log is successful. 
+            If not successful, append message to errorMessage and display
+            printErrorMessage().
+            Otherwise, in normal times, if printErrorMessage() is false,
+            run displayNormal()
+        */
 
-            //TODO: add errors to last element is log.txt csv line
-            
-            while(1); //infinite blocker here.
+        //alert user of errors if any for immediate remedy. If error detected,
+        // halt operation immediately.
+        runtimechecks();
+        if (!printErrorMessage()) 
+        {
+            displayNormal();
+            loggywoggy();
+        }
+        else
+        {
+            while(1);
         }
     }
 }
