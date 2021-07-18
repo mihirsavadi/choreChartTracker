@@ -45,6 +45,8 @@ Haven't reached this part yet. Need to collect more data. Lots of potential insi
 
 TODOS:  
 
+- Potential bug: SD card removal error detection only during programmed logging time. Must enable detection at all times.
+- Potential bug: If any error happens (whenever it does happen), it must log to the sd card's csv file. Right now logging only happens during the programmed log time, whether or not an error has occurred. Must enable writing to CSV at both programmed log time and at occurrence of an error.
 - Integrate ESP32 WiFi and google sheets back-up functionality.
 
 Old Notes:
